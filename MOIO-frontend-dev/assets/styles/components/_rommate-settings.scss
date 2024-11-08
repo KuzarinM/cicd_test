@@ -15,6 +15,8 @@
 		&-text{
 			width: 100%;
 			@include capabilities-modal-header;
+			text-align: center;
+			color: $color-active;
 		}
 		.ui-button.--blank{
 			font-size: 24px;
@@ -25,11 +27,13 @@
 	}
 	&__user-info{
 		display: flex;
+		flex-direction: column;
 		align-items: center;
+		justify-content: center;
 		margin-top: 36px;
-		gap: 20px;
 		.profile-card__avatar{}
 		&-name{
+			margin-top: 16px;
 			font-size: 16px;
 			font-weight: 600;
 			text-align: center;
@@ -62,7 +66,6 @@
 		}
 	}
 	&__submit{
-		margin-top: 20px;
-		width: 100%;
+		margin-top: 36px;
 	}
 }

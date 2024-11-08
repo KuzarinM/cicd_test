@@ -12,7 +12,6 @@ export default {
       'devices.capabilities.range-brightness': 'Яркость',
       'devices.capabilities.range-threshold_temperature': 'Температура',
       'devices.capabilities.color_setting': 'Цвет',
-      'devices.capabilities.mode-fan_speed': 'Скорость',
     },
   },
 }

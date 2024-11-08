@@ -85,7 +85,7 @@ export default defineNuxtConfig({
     ],
   },
   css: [
-    `~/assets/fonts/Manrope/stylesheet.css`,
+    '~/assets/fonts/Jura/stylesheet.css',
     '~/assets/styles/main.scss',
   ],
 })

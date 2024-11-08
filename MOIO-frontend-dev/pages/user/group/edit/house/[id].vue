@@ -1,106 +1,81 @@
 <template>
   <div class="add-group --edit">
     <loader-screen :is-loading="isLoading" />
-    <h1 class="add-group__header">
-      Изменить дом
-    </h1>
-    <form method="post" class="add-group__form" @submit.prevent="editGroup()">
-      <div class="add-group__input-group">
-        <div class="add-group__input-group-flexrow">
-          <span v-show="!isNameChanging">{{ name }}</span>
+    <div class="add-group">
+      <h1 class="add-group__header">
+        Изменить дом
+      </h1>
+      <form method="post" class="add-group__form" @submit.prevent="editGroup()">
+        <div class="add-group__input-group">
+          <label for="group" class="add-group__label">Введите название дома</label>
           <input
-            v-show="isNameChanging"
             id="group"
             v-model="name"
             type="text"
             name="group"
             class="add-group__input"
-            placeholder="Название комнаты"
+            placeholder="Название дома"
             required
           >
-          <ui-button
-            v-show="!isNameChanging"
-            class-name="blank"
-            padding="0"
-            @click="isNameChanging=!isNameChanging"
-          >
-            <ui-icon name="pencil" size="24" color="$color-icon-hover" />
-          </ui-button>
-
-          <ui-button
-            v-show="isNameChanging"
-            class-name="blank"
-            padding="0"
-            @click="isNameChanging=!isNameChanging"
-          >
-            <ui-icon name="check" size="24" color="$color-icon-hover" />
-          </ui-button>
         </div>
-      </div>
-      <form method="post" @submit.prevent="deleteGroup()">
-        <button class="add-group__delete" type="submit">
-          <ui-icon
-            size="20"
-            name="delete"
-          />
-          Удалить дом
-        </button>
-      </form>
-      <div v-if="house?.length>1" class="add-group-available-devices">
-        <div class="add-group__preview-wrapper">
-          <div v-if="users?.length" class="add-group__preview">
-            <div class="add-group__preview-section">
-              <div class="add-group__preview-section-title">
-                Гости <ui-icon style="cursor: pointer;" name="plus" @click="groupStore.isAddRoommates = true" />
+        <div v-if="house?.length>1" class="add-group-available-devices">
+          <div class="add-group__preview-wrapper">
+            <div v-if="previewData.name?.length" class="add-group__preview">
+              <div class="add-group__preview-section">
+                <div class="add-group__preview-section-title">
+                  Название дома
+                </div>
+                <div class="add-group__preview-section-value">
+                  {{ previewData.name }}
+                </div>
               </div>
-              <div class="profile-roommates-section__list">
-                <profile-roommates
-                  v-for="user in users"
-                  :id="user.id"
-                  :key="user.id"
-                  :name="user.name"
-                  :login="user.login"
-                  :groups="user.groupsIsPending"
-                  :is-pending="user.isPending"
-                  :is-change="true"
-                  @remove-user="getRoommates()"
-                  @user-for-remove="(e)=>{
-                    usersForRemove.push({id:user.id, name:user.name} as IUsersByGroupResponse);
-                    users.splice(users.findIndex(el=>el.id === user.id),1)
-                  }"
-                />
+              <div class="add-group__preview-section">
+                <div class="add-group__preview-section-title">
+                  Гости дома
+                </div>
+                <div v-if="previewData.users?.length" class="add-group__preview-section-value">
+                  <ui-any-list-item v-for="user in previewData.users" :key="user.id">
+                    <template #title>
+                      {{ user?.name }}
+                    </template>
+                    <template #action>
+                      <ui-button
+                        class-name="blank"
+                        padding="0"
+                        @click="(e)=>{
+                          usersForRemove.push({id:user.id,name:user.name});
+                          users.splice(users.findIndex(el=>el.id === user.id),1)
+                        }"
+                      >
+                        <ui-icon
+                          v-if="user.id !== groupStore.group.groupCreatorId"
+                          name="delete"
+                          color="#D15151"
+                          size="20"
+                        />
+                      </ui-button>
+                    </template>
+                  </ui-any-list-item>
+                </div>
+                <div v-else class="add-group__preview-section-value">
+                  Нет приглашенных пользователей
+                </div>
               </div>
-              <ui-modal
-                ref="addRoommateModal"
-                :is-shown="groupStore.isAddRoommates"
-                backdrop-filter="blur(3px)"
-                transition-fade-name="fade"
-                transition-content-name="translate"
-                place=".layout"
-                width="528px"
-                @click-outside="groupStore.isAddRoommates = false"
-              >
-                <template #inner>
-                  <add-roommate-modal
-                    @modal-close="groupStore.isAddRoommates = false"
-                    @add-roommate="getRoommates()"
-                    @refresh-data="getGroupData()"
-                  />
-                </template>
-              </ui-modal>
             </div>
           </div>
+          <div class="add-group__submit-wrapper">
+            <ui-button type="submit" margin-inline="0" rounded="16px">
+              Сохранить
+            </ui-button>
+            <form method="post" @submit.prevent="deleteGroup()">
+              <ui-button type="submit" margin-inline="0" rounded="16px" class-name="delete">
+                Удалить
+              </ui-button>
+            </form>
+          </div>
         </div>
-        <div class="add-group__buttons">
-          <ui-button class="add-group__button" variant="secondary" @click="cancelEdit">
-            Отменить
-          </ui-button>
-          <ui-button class="add-group__button" variant="primary" type="submit">
-            Сохранить
-          </ui-button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -109,39 +84,21 @@
 import { useGroupsStore } from "~/store/groups"
 import LoaderScreen from "~/components/shared/LoaderScreen.vue"
 import UiIcon from "~/components/ui/UiIcon.vue"
-import AddRoommateModal from "~/components/Profile/AddRoommateModal.vue"
 import useDataForGroupEdit from "~/composables/useDataForGroupEdit"
 import useEditGroup from "~/composables/useEditGroup"
-import { useUserStore } from "~/store/user"
-import ProfileRoommates from "~/components/Profile/ProfileRoommates.vue"
-import type { IUsersByGroupResponse } from '~/api/group/getUsersByGroupId'
-
-const userStore = useUserStore()
-const groupStore = useGroupsStore()
-const addRoommateModal = ref(null)
-const roommatesFetch = useLazyAsyncData(
-  'groupUsers',
-  () => groupStore.getUsersByGroupId(groupStore.currentHome),
-)
-
-storeToRefs(userStore)
-
-async function getRoommates () {
-  await roommatesFetch.refresh()
-}
 
 let oldName = ''
 const isLoading = ref(false)
-const isNameChanging = ref(false)
 const id = useRoute().params.id as string
 const name = ref('')
 const house = ref("")
-const users = ref<IUsersByGroupResponse[]>([])
-const usersForRemove = ref<IUsersByGroupResponse[]>([])
-
-const cancelEdit = () => {
-  navigateTo('/')
-}
+const users = ref<{id:number, name:string}[]>([])
+const usersForRemove = ref<{id:number, name:string}[]>([])
+const groupStore = useGroupsStore()
+const previewData = ref({
+  name,
+  users,
+})
 
 async function getGroupData () {
   isLoading.value = true
@@ -161,12 +118,12 @@ async function editGroup () {
   isLoading.value = false
   if (isSuccess) {
     setTimeout(() => {
-      useRouter().push({ path: '/' })
+      useRouter().push({ path: '/user/group/' + id })
     }, 900)
   }
 }
 async function deleteGroup () {
-  await groupStore.deleteGroup(id, true)
+  await groupStore.deleteGroup(id)
 }
 
 

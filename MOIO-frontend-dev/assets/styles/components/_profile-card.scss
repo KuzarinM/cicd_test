@@ -1,40 +1,29 @@
 .profile-card {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  &__head{
-    @include capabilities-modal-header;
-    margin-top: 40px;
-    margin-bottom: 40px;
-  }
+  justify-content: center;
+  align-items: center;
   &__avatar{
-    display: flex;
-    gap: 20px;
     &.--blank{
       display: block;
-      width: 112px;
-      height: 112px;
+      width: 136px;
+      height: 136px;
       border-radius: 100%;
-      background: $color-active;
+      background: linear-gradient(180deg, $avatar-bg-gradient-start 0%, $avatar-bg-gradient-end 100%);
     }
   }
   .profile-card-info{
+    text-align: center;
     width: 100%;
-    padding-bottom: 40px;
-    border-bottom: 1px solid $color-border;
     &__role{
+      margin-top: 36px;
       @include aside-header;
       font-weight: 300;
     }
     &__name{
-      p{
-        font-size: 16px;
-      }
       font-size: 24px;
       font-weight: 600;
       display: flex;
-      gap: 8px;
-      flex-direction: column;
       justify-content: center;
       
       @media screen and (max-width:768px) {
@@ -46,17 +35,18 @@
         gap: 4px;
       }
     }
-    &__change-data{
+    &__change-name{
       display: flex;
       align-items: center;
+      gap: 20px;
       &-input{
+        width: min(360px, 95%);
+        text-align: center;
+        padding: 4px;
         font-size: 24px;
-        background: none;
+        background: $settings-color;
+        border-radius: 12px;
         border: 0;
-        border-bottom: 1px solid $color-primary;
-        &:focus{
-          outline: none;
-        }
         @media screen and (max-width:768px) {
           font-size: 20px;
         }
@@ -76,25 +66,21 @@
       }
     }
     &__data{
-      margin-top: 40px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid $color-border;
+      margin-top: 32px;
       gap:40px;
       display: flex;
-      flex-direction: column;
       flex-wrap: wrap;
       justify-content: space-around;
-      align-items: flex-start;
+      align-items: flex-end;
  
       &-group{
-        margin: 0;
-        width: min(400px, 95%);
+        width: min(312px, 95%);
         &.ui-button {
-          width: 400px;
+          width: fit-content;
         }
         &.--password{
           a{
-            line-height: 46px;
+            color: $color-accent;
           }
         }
         &-label{
@@ -104,19 +90,17 @@
         &-data {
           position: relative;
           display: flex;
-          margin-top: 10px;
-          background: none;
-          font-size: 24px;
-          span{
-            display: flex;
-            align-items: center;
-            gap: 8px;
-          }
-          &-input{
+          justify-content: space-between;
+          margin-top: 8px;
+          background: $settings-color;
+          padding: 8px 11px;
+          border-radius: 12px;
+          font-size: 20px;
+          input{
             background: transparent;
             width: calc(100% - 20px);
             border: 0;
-            font-size: 24px;
+            font-size: 20px;
             &:focus,&:focus-within,&:focus-visible{
               outline: 0;
             }

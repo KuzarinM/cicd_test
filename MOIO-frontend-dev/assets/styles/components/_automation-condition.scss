@@ -1,28 +1,19 @@
 .automation-condition {
+	margin-top: 32px;
 	&__header{
 		font-size: 24px;
 		font-weight: 600;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		color: $color-primary;
-	}
-	&__body{
-		margin-bottom: 20px;
-	}
-	&__next{
-		background: none !important;
-		color: $color-active !important;
 	}
 	&__description{
-		margin-top: 12px;
-		color: $color-primary;
-		@media screen and (max-width:600px) {
-			margin-top: 20px;
-		}
+		margin-top: 24px;
 	}
 	&__time{
 		margin-top: 20px;
+		min-width: min(212px, 100%);
+		max-width: min(326px,100%);
+		border-radius: 16px;
+		border: 1px solid $color-active;
+		padding: 20px 24px;
 		&-value{
 			display: flex;
 			align-items: center;
@@ -39,46 +30,28 @@
 		}
 	}
 	&__sensors{
-		margin-bottom: 20px;
-		margin-top: 20px;
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(153px, calc(50% - 12px)), 1fr));
-		gap: 12px;
-		width: 100%;
+		display: flex;
+		gap:28px;
+		flex-wrap: wrap;
 	}
 	&__sensor{
-		background: $bg-service-primary;
+		background: $settings-color;
+		margin-top: 20px;
 		border-radius: 12px;
-		width: 100%;
-		height: 120px;
-		padding: 12px;
+		width: max(192px, calc(25% - 28px));
+		padding: 8px 12px;
 		display: flex;
+		min-height: 76px;
+		gap: 14px;
 		position: relative;
-		border: 1px solid $color-border;
+		cursor: not-allowed;
 		&.--editable {
 			cursor: pointer;
-		}
-		&.--active{
-			cursor: default;
-			border: 1px solid $color-active;
-			background-color: rgba(0,104,164,0.32);
-			.automation-condition__sensor-info{
-				color: #fff;
-				&__check{
-					color: #fff;
-				}
-			}
 		}
 		&-info{
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
-			font-size: 20px;
-			width: 100%;
-			&__check{
-				display: flex;
-				justify-content: space-between;	
-			}
 		}
 		&-condition{
 			position: absolute;
@@ -106,7 +79,11 @@
 			border-radius: 12px;
 			border: 1px solid transparent;
 			z-index: 0;
-
+			&.--active{
+				border: 1px solid $color-active;
+				box-shadow: 0px 0px 16px 0px $color-active;
+				-webkit-box-shadow: 0px 0px 16px 0px $color-active;
+			}
 		}
 		.mdi {
 			margin: auto 0;

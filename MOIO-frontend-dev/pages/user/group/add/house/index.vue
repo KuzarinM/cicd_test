@@ -9,9 +9,12 @@
         <label for="group" class="add-group__label">Введите название дома</label>
         <input id="group" v-model="name" type="text" name="group" class="add-group__input" required placeholder="Название дома">
       </div>
-      <ui-button class="add-group__button add-group__button--long" variant="secondary" type="submit">
-        Добавить
-      </ui-button>
+
+      <div class="add-group__submit-wrapper">
+        <ui-button type="submit" rounded="16px">
+          Добавить
+        </ui-button>
+      </div>
     </form>
   </div>
 </template>
@@ -20,6 +23,7 @@
 <script setup lang="ts">
 import { useGroupsStore } from "~/store/groups"
 import LoaderScreen from "~/components/shared/LoaderScreen.vue"
+
 
 const groupStore = useGroupsStore()
 const isLoading = ref(false)
@@ -34,7 +38,7 @@ async function addGroup () {
     return
   }
   isLoading.value = true
-  await groupStore.addGroup(name.value, groupStore.getGroupTypeId('House'))
+  await groupStore.addRoom(name.value, 1)
   isLoading.value = false
 }
 </script>

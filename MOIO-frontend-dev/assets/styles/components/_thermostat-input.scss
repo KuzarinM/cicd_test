@@ -2,70 +2,49 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  &__range {
-    width: 265px;
-    height: fit-content;
-    overflow: visible;
+  &__value{
     position: absolute;
-    #thumb{
-      filter: drop-shadow(0px 0px 7px rgba(0, 196, 241, 0.5)) ;
-      fill: #fff;
+    width: 160px;
+    height: 160px;
+    border-radius: 100%;
+    background: linear-gradient(180deg, #FFC97C 0%, #B2D0F3 76.22%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 16px #D2F1FD;
+    -webkit-box-shadow: 0px 0px 16px #D2F1FD;
+    top: calc((216px / 4) - 4px);
+    color: $bg-primary;
+    @include header-submenu-item;
+    font-weight: 700;
+  }
+  &__range-border {
+    position: absolute;
+    bottom: calc((160px / 2));
+    &.--min{
+      left: 0;
+    }
+    &.--max{
+      right: 0;
     }
   }
-  &__drag-area {
-    height: 60%; 
-    width:100%; 
-    position: absolute; 
-    top: 0; 
-    z-index: 5;
-  }
-  &__progress{
-    stroke: $color-active;
+  .thermostat-svg{
+    overflow: visible;
+    &__progress{
+      stroke: $color-active;
+    }
   }
   &__controls{
     display: flex;
     justify-content: space-between;
-    width: 74%;
-    fill: $color-bg-hover;
-    padding-left: 10px;
-    top: calc((230px / 2) + 52px);
+    width: 100%;
+    position: absolute;
+    top: calc((216px / 2) + 52px);
     flex-direction: row-reverse;
+    padding-inline: 2px;
     &-action{
-      font-size: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      align-items: center;
-      position: relative;
-      z-index: 1;
+      font-size: 32px;
     }
-    &-text{
-      right: 35px;
-      font-size: 20px;
-      font-weight: 700;
-      color: $color-primary;
-    }
-  }
-  &__output {
-    width: 160px;
-    height: 160px;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-    justify-content: flex-end;
-    pointer-events: none;
-    line-height: 1.5;
-  }
-  &__value{
-    font-size: 30px;
-    font-weight: 700;
-    color: $color-primary;
-  }
-  &__text {
-    font-size: 12px;
-    opacity: 0.6;
-    left: 50%;
-    width: 100px;
+    
   }
 }

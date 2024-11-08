@@ -1,14 +1,15 @@
 <template>
   <div class="profile-card">
-    <h2 class="profile-card__head">
-      Личные данные
-    </h2>
     <loader-screen :is-loading="isLoading" />
     <div class="profile-card__avatar">
-      <img v-if="avatarUrl?.length" :src="avatarUrl" width="112" height="112">
+      <img v-if="avatarUrl?.length" :src="avatarUrl" width="136" height="136">
       <div v-else class="profile-card__avatar --blank" />
+    </div>
+    <div class="profile-card-info">
+      <div class="profile-card-info__role">
+        {{ role }}
+      </div>
       <div v-if="displayedName" class="profile-card-info__name">
-        <p>Имя пользователя</p>
         <span v-show="!isNameChanging" class="name">
           {{ displayedName }}
           <ui-button
@@ -17,14 +18,14 @@
             padding="0"
             @click="isNameChanging=!isNameChanging"
           >
-            <ui-icon name="pencil" size="24" color="var(--color-bg-switch)" />
+            <ui-icon name="pencil" size="18" color="var(--color-active)" />
           </ui-button>
         </span>
-        <form v-show="isNameChanging" method="post" class="profile-card-info__change-data" @submit.prevent="changeName">
-          <input v-model="newName" type="text" class="profile-card-info__change-data-input" required>
+        <form v-show="isNameChanging" method="post" class="profile-card-info__change-name" @submit.prevent="changeName">
+          <input v-model="newName" type="text" class="profile-card-info__change-name-input" required>
           <ui-button
             padding="4px"
-            fill="var(--color-bg-switch)"
+            fill="var(--color-active)"
             rounded="100%"
             class-name="blank"
             @click.prevent="changeName()"
@@ -33,41 +34,36 @@
           </ui-button>
         </form>
       </div>
-    </div>
-    <div class="profile-card-info">
-      <div class="profile-card-info__role">
-        {{ role }}
-      </div>
-
+      <hr class="profile__divider">
       <div class="profile-card-info__data">
         <div class="profile-card-info__data-group">
           <div class="profile-card-info__data-group-label">
             ClientID
           </div>
           <div class="profile-card-info__data-group-data">
-            <span v-show="!isClientIdChanging">
-              {{ newClientId }}
-              <ui-button
-                class-name="blank"
-                type="submit"
-                padding="0"
-                @click="isClientIdChanging=!isClientIdChanging"
-              >
-                <ui-icon name="pencil" size="24" color="var(--color-bg-switch)" />
-              </ui-button>
-            </span>
-            <form v-show="isClientIdChanging" method="post" class="profile-card-info__change-data" @submit.prevent="changeClientId()">
-              <input v-model="newClientId" type="text" class="profile-card-info__change-data-input" required>
-              <ui-button
-                padding="4px"
-                fill="var(--color-bg-switch)"
-                rounded="100%"
-                class-name="blank"
-                @click.prevent="changeClientId()"
-              >
-                <ui-icon name="check" size="18" color="var(--settings-color)" />
-              </ui-button>
-            </form>
+            <input
+              v-model="newClientId"
+              :disabled="!isClientIdChanging"
+              @click="!isClientIdChanging && copyToClipBoard(clientId as string,'clientId')"
+            >
+            <ui-button
+              class-name="blank"
+              padding="0"
+              @click="isClientIdChanging = !isClientIdChanging"
+            >
+              <ui-icon name="pencil" size="18" color="var(--color-active)" />
+            </ui-button>
+            <ui-button
+              v-if="isClientIdChanging"
+              padding="4px"
+              fill="var(--color-active)"
+              rounded="100%"
+              class-name="blank"
+              class="--submit"
+              @click.prevent="changeClientId()"
+            >
+              <ui-icon name="check" size="18" color="var(--settings-color)" />
+            </ui-button>
           </div>
         </div>
         <div class="profile-card-info__data-group">
@@ -75,23 +71,28 @@
             Почта
           </div>
           <div class="profile-card-info__data-group-data">
-            <span v-if="!isChangeLogin" @click="copyToClipBoard(login as string,'email')">
-              {{ login }}<ui-icon name="pencil" style="cursor: pointer;" size="24" color="var(--color-bg-switch)" @click="isChangeLogin = !isChangeLogin" />
+            <span @click="copyToClipBoard(login as string,'email')">
+              {{ login }}
             </span>
-            <user-edit v-if="isChangeLogin" :type="'email'" />
+            <nuxt-link to="/user/edit?email=true">
+              <ui-icon name="pencil" size="18" />
+            </nuxt-link>
           </div>
         </div>
+        <ui-button padding="8px 12px" rounded="16px" class="profile-card-info__data-group --password">
+          <nuxt-link to="/user/edit?password=true">
+            Сменить пароль
+          </nuxt-link>
+        </ui-button>
       </div>
-      <h2 class="profile-card__head --password">
-        Изменение пароля
-      </h2>
-      <user-edit :type="'password'" />
     </div>
+    <!--    <button class="add-fg-print" @click="getCredential()">-->
+    <!--      add fg print-->
+    <!--    </button>-->
   </div>
 </template>
 
 <script setup lang="ts">
-import UserEdit from "../../pages/user/edit/userEdit.vue"
 import UiIcon from "~/components/ui/UiIcon.vue"
 import { useUserStore } from "~/store/user"
 import LoaderScreen from "~/components/shared/LoaderScreen.vue"
@@ -111,8 +112,6 @@ const isClientIdChanging = ref(false)
 const isLoading = ref(false)
 const newName = ref(props.displayedName)
 const newClientId = ref(props.clientId ?? '')
-const isChangeLogin = ref(false)
-
 async function changeName () {
   if (!newName.value?.length) {
     useNotification('error', 'Имя не может быть пустым')
@@ -140,6 +139,15 @@ async function changeClientId () {
   newClientId.value = userStore.clientId
   isClientIdChanging.value = false
 }
+async function copyToClipBoard (text:string, type:'clientId'|'email') {
+  try {
+    const result = await navigator.clipboard.writeText(text)
+    useNotification('info', `${type} скопирован в буфер обмена`)
+  } catch {
+
+  }
+}
+
 
 function coerceToBase64Url (input:any) {
   // Array or ArrayBuffer to Uint8Array
@@ -152,6 +160,7 @@ function coerceToBase64Url (input:any) {
   }
 
   // Uint8Array to base64
+
   if (input instanceof Uint8Array) {
     let str = ""
     const len = input.byteLength
@@ -179,6 +188,7 @@ async function setCreds (assertedCredential:any) {
   let clientDataJSON = assertedCredential.response.clientDataJSON
   delete clientDataJSON.other_keys_can_be_added_here
   clientDataJSON = new Uint8Array(clientDataJSON)
+  const rawId = new Uint8Array(assertedCredential.rawId)
   // const sig = new Uint8Array(assertedCredential.response.signature)
   // const userHandle = new Uint8Array(assertedCredential.response.userHandle)
 
@@ -238,20 +248,5 @@ const getCredential = async () => {
 
 <style lang="scss">
 @import "assets/styles/components/profile-card";
-.prof-setting{
-  display: none;
-  &__header{
-    @include aside-header;
-    margin-bottom: 20px;
-    margin-top: 20px;
-  }
-  @media screen and (max-width: 1200px) {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    border-bottom: 1px solid $color-border;
-    padding-bottom: 40px;
-  }
-}
 
 </style>

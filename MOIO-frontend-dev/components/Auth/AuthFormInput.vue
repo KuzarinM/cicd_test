@@ -1,6 +1,5 @@
 <template>
   <div ref="authInputParent" class="auth-input">
-    <label class="auth-input__label">{{ label }}</label>
     <input
       v-model="model"
       class="auth-input__field"
@@ -10,6 +9,7 @@
       :placeholder="placeholder??' '"
       :required="Boolean(required)"
     >
+    <label class="auth-input__label">{{ label }}</label>
   </div>
 </template>
 
@@ -18,7 +18,7 @@
 export type FormInput = {
   label:string,
   name:string,
-  value?:string,
+  value:string,
   type?:string,
   autocomplete?:string
   placeholder?:string

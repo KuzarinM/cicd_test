@@ -7,10 +7,7 @@ export default async function useSocket (httpCtxUrl:string, autoReconnect = fals
   await userStore.init()
   const connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.None)
-    .withUrl(httpCtxUrl + '?userid=' + userStore.userInfo.id,
-      {
-        withCredentials: false,
-      })
+    .withUrl(httpCtxUrl + '?uid=' + userStore.userInfo.id, { accessTokenFactory: () => userStore.accessToken })
     .build()
   async function start () {
     try {

@@ -1,37 +1,31 @@
 .profile-invitation{
-	width: min(410px,100%);
+	width: min(400px,100%);
+	margin-inline: auto;
 	&__header{
 		@include capabilities-modal-header;
+		text-align: center;
 		margin-top: 40px;
 	}
 	&__form{
-		margin-top: 40px;
-	}
-	&__button {
-		margin-top: 40px;
-		width: 100%;
+		margin-top: 20px;
+		.ui-button{
+
+			margin-top: 32px;
+		}
 	}
 	&__label{
 		@include carousel-category-item;
-		line-height: 24px;
+		text-align: center;
+		margin-inline: auto;
 	}
 	&__input-container{
 		display: flex;
-		flex-direction: column;
+		gap:12px;
 		width: 100%;
-		margin-top: 40px;
+		margin-top: 36px;
 		position: relative;
 		button.blank{
 			color: $color-active;
-		}
-		label{
-			font-size: 24px;
-			color: $color-bg-switch;
-			font-weight: 600;
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			margin-top: 20px;
 		}
 	}
 	&__input-group{
@@ -40,19 +34,11 @@
 		align-items: center;
 	}
 	&__input{
-		padding: 8px 0 8px 0;
-		background: none;
+		background: $settings-color;
 		border: 0;
-		margin-top: 12px;
+		border-radius: 12px;
+		padding: 8px 16px ;
 		@include tool-item;
-		width: 100%;
-		border-bottom: 1px solid $color-border;
-		&:focus{
-			outline: none;
-			border-bottom: 1px solid $color-primary;
-		}
-	}
-	@media screen and (max-width:1200px) {
-		margin-bottom: 60px;
+		width: calc(100% - 12px - 28px);
 	}
 }

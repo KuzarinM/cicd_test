@@ -1,40 +1,13 @@
 <template>
   <div
     ref="service"
-    :class="`service --scenario --click-able ${isAutomation ? `--automation`:''} ${selected && !isAutomation
-      || (!isPreview && (((isDeviceOn === true ||
-        isDeviceOn === 'true') && !isDeviceCurtain) ||
-        (isDeviceSensorMove && isDeviceSensorMoveValue)||
-        (isDeviceSensorOpen && isDeviceSensorOpenValue)||
-        String(isDeviceOpen)?.indexOf('open') > -1 ||
-        Number.parseInt(deviceOpenValue?.value) === deviceOpenValue?.range?.max)
-      ) // Добавлена проверка, т.к. у штор специфические capability
-      ? '--active':''}`" role="button"
+    :class="`service --scenario ${selected&&'--active'}`"
+    role="button"
   >
-    <div
-      ref="info" class="service-info"
-      @click.right="handleRightMouse()"
-      @click.left="!isPreview ? emit('toggleDevice',{id: props.id,state: !isDeviceOn}):handleLeftMouse(),emit('onOff', {id: props.id,state: !isDeviceOn})"
-    >
+    <div ref="info" class="service-info" @mousedown.left.stop="handleLeftMouse()">
       <div class="service-ico-wrapper">
-        <ui-icon :name="ico" size="24" />
+        <ui-icon :name="ico" size="30" />
       </div>
-      <div v-if="stuff?.value && !isDeviceCurtain" class="service-stuff">
-        {{ stuff?.value }}{{ stuff?.instance?.includes('temp')?'°C':'' }}{{ stuff.instance?.includes('brightness')?'%':'' }}
-        <ui-icon v-show="isDeviceFan" :name="fanIcon!" size="20" />
-      </div>
-
-      <!-- Вывод информации о шторах, т.к. у них специфический capability -->
-      <div
-        v-if="isDeviceCurtain"
-        class="service-stuff"
-      >
-        {{ curtainStatus }}
-      </div>
-      <!-- Конце вывода информации о Шторах -->
-
-      <ui-checkbox v-if="isAutomation" style="z-index: 2;" class="checked" :checked="selected" @click.stop="emit('selectDevice', { ...props})" />
-
       <div class="service-name">
         <span>
           {{ name }}
@@ -50,8 +23,8 @@
         :is-shown="isCapabilitiesShow"
         transition-fade-name="fade"
         transition-content-name="translate"
+        bg-color=""
         backdrop-filter="blur(5px)"
-        border="1px solid var(--color-border)"
       >
         <template #inner>
           <div ref="target" class="service-capabilities-modal" role="dialog">
@@ -59,36 +32,27 @@
               <span>
                 {{ name }}
               </span>
-              <template v-for="item in onOffCapabilities" :key="item.type">
-                <ui-toggle
-                  :checked="String(item.value).includes('open') || String(item.value).includes('true')"
-                  vertical-large
-                  openable
-                  @check="(e: boolean)=>emit('toggleDevice',{id: props.id,state: e})"
-                />
-              </template>
             </div>
             <div class="service-capabilities-modal__body">
               <service-capabilities-structure>
                 <template
-                  v-for="capability in deviceCapabilities"
-                  :key="getCapabilityTypeInstanceName(capability)"
-                  #[getCapabilityTypeInstanceName(capability)]
+                  v-for="item in capabilities"
+                  :key="item.type"
+                  #[item.type]
                 >
-                  <scenarios-scenario-service-capability
+                  <scenario-service-capability
                     :device-id="id.replace(/_ch[0-9]*/gm,'')"
                     :chanel="id.replace(/^[a-zA-Z0-9_.-]*_ch/gm,'')"
-                    :instance="capability.instance"
-                    :range="capability.range"
-                    :reportable="capability.reportable"
-                    :retrievable="capability.retrievable"
-                    :type="capability.type"
-                    :capability-custom-type="capability.capabilityCustomType"
+                    :instance="item.instance"
+                    :range="item.range"
+                    :reportable="item.reportable"
+                    :retrievable="item.retrievable"
+                    :type="item.type"
                     :device-type="type"
-                    :hsv="capability.hsv"
-                    :value="capability.value"
+                    :hsv="item.hsv"
+                    :value="item.value"
                     :icon="ico"
-                    @update-bool-val="(e: any)=>{emit('updateCapability',e)}"
+                    @update-bool-val="e=>{emit('updateCapability',e)}"
                   />
                 </template>
               </service-capabilities-structure>
@@ -98,7 +62,7 @@
       </ui-modal>
     </div>
     <ui-icon
-      v-if="!isPreview && !props.isAutomation"
+      v-if="!isPreview"
       name="delete"
       color="#D15151"
       size="20"
@@ -110,152 +74,58 @@
 
 <script setup lang="ts">
 import { onLongPress } from '@vueuse/core'
+import ScenarioServiceCapability from './ScenarioServiceCapability.vue'
 import UiModal from "~/components/ui/UiModal.vue"
 import useIcoByDeviceType from "~/composables/useIcoByDeviceType"
+import { useGroupsStore } from "~/store/groups"
 import UiIcon from "~/components/ui/UiIcon.vue"
 import type { ServiceProps } from "~/components/Service/TheService.vue"
-import type { ICapability } from '~/api/automations/getById'
-import { modeIcons } from "~/utils/variables"
 
 export interface IScenarioService {
   isPreview?:boolean
   selected?:boolean
-  isAutomation?:boolean
 }
 
 const props = defineProps<IScenarioService & ServiceProps>()
 const emit = defineEmits<{
-  selectDevice: [any],
-  leftMouseClick: [IScenarioService & ServiceProps],
-  updateCapability: [any],
-  toggleDevice:[any]
-  onOff:[any]
+	leftMouseClick:[IScenarioService & ServiceProps],
+	updateCapability:[any],
 }>()
-const turnOn = ref()
 const isMounted = ref(false)
 const service = ref<HTMLDivElement | null>(null)
 const isCapabilitiesShow = ref(false)
 const target = ref(null)
 const ico = props.deviceIcon?.name ?? useIcoByDeviceType(props.type).name
+const groupStore = useGroupsStore()
 const info = ref()
-const floatValue = ref(props.capabilities?.find(el => el.type.includes('float')))
-const stuff = ref<ICapability>({} as ICapability)
-const isDeviceOn = ref(props.capabilities?.find(el => el.type === 'devices.capabilities.on_off')?.value)
-const isDeviceOpen = ref(props.capabilities?.find(el => el.instance === 'open' || el.type === 'devices.types.openable.garage')?.value)
-const isDeviceFan = ref(props.type === 'devices.types.fan')
-const isDeviceCurtain = ref(props.type === 'devices.types.openable.curtain') // Тип шторы
-const isDeviceSensorMove = ref(props.type === 'devices.types.sensor.motion')
-const isDeviceSensorOpen = ref(props.type === 'devices.types.sensor.open')
-const isDeviceFanValue = ref(props.capabilities?.find(el => el.instance === 'fan_speed')?.value)
-const isDeviceSensorMoveValue = computed(() => !(isDeviceSensorMove && props.capabilities?.find(el => el.value === 'not_detected')))
-const isDeviceSensorOpenValue = computed(() => !!(isDeviceSensorOpen && props.capabilities?.find(el => el.value === 'init')))
-const onOffCapabilities = computed(() => props.capabilities?.filter(capability => (capability.instance === 'open' || capability.type === 'devices.capabilities.on_off') && !isDeviceCurtain.value))
-const deviceCapabilities = computed(() => props.capabilities?.filter(capability => !(capability.instance === 'open' || capability.type === 'devices.capabilities.on_off') || isDeviceCurtain.value))
-
-const fanIcon = computed(() => {
-  return modeIcons.find(item => item.mode === Number(isDeviceFanValue.value))?.icon
-})
-
-// Вычисляемое значение "Открытости" у Штор
-const deviceOpenValue = computed(() => props.capabilities?.find(el => el.instance === 'open'))
-
-// Значение статуса "Открытости" у Штор
-const curtainStatus = computed(() => {
-  if (deviceOpenValue.value?.value === null) {
-    return ''
-  }
-
-  if (Number.parseInt(deviceOpenValue.value?.value) === deviceOpenValue.value?.range?.min) {
-    return 'Открыто'
-  }
-
-  if (Number.parseInt(deviceOpenValue.value?.value) === deviceOpenValue.value?.range?.max) {
-    return 'Закрыто'
-  }
-
-  // Вычисляем значение на range у Штор
-  const range = deviceOpenValue.value?.range?.max
-    ? (deviceOpenValue.value.range.max - deviceOpenValue.value?.value)
-    : (100 - deviceOpenValue.value?.value)
-
-  return `Открыто на ${range}%`
-})
 
 onClickOutside(target, () => {
   isCapabilitiesShow.value = false
-  setDisplayedStuff()
 }, { ignore: [info] })
 
 function handleLeftMouse () {
   if (props.isPreview) {
     emit('leftMouseClick', props)
   }
-  if (!props.isPreview && !props.selected) {
-    console.log('turn on|off')
-    emit('selectDevice', { ...props })
+  if (!props.isPreview) {
+    isCapabilitiesShow.value = true
   }
 }
-
-// Получение типа capability, которые состоят из type и instance
-function getCapabilityTypeInstanceName (item:ICapability) {
-  return `${item.type}${item.instance ? '-' + item.instance : ''}`
-}
-
-function handleRightMouse () {
-  isCapabilitiesShow.value = true
-}
-
-function setDisplayedStuff () {
-  if ((props?.capabilities?.length && props?.capabilities?.length <= 1) || props.type.includes('_sen')) { return }
-  const capabilityWithFloatValueIdx = props.capabilities?.findIndex(el => Number.parseFloat(el.value) && el.type.includes('properties.float')) as number
-  const capabilityWithRangeIdx = props.capabilities?.findIndex(el => el.type === 'devices.capabilities.range') as number
-  const capabilityWithNumValueIdx = props.capabilities?.findIndex(el => Number.isInteger(el.value)) as number
-  const hsvIdx = props.capabilities?.findIndex(el => el?.hsv?.h || el?.hsv?.s || el?.hsv?.v) as number
-
-  const capabilityWithFanModeId = props.capabilities?.findIndex(el => el.type === 'devices.capabilities.mode') ?? -1
-
-  if (props?.capabilities && props?.capabilities[capabilityWithFloatValueIdx]) {
-    stuff.value = reactive(props?.capabilities[capabilityWithFloatValueIdx])
-    floatValue.value = props?.capabilities[capabilityWithFloatValueIdx]
-  }
-  if (props?.capabilities && props?.capabilities[capabilityWithRangeIdx]) {
-    stuff.value = reactive(props?.capabilities[capabilityWithRangeIdx])
-  }
-  if (props?.capabilities && !props?.capabilities[capabilityWithFloatValueIdx] && props?.capabilities[capabilityWithNumValueIdx]) {
-    stuff.value = reactive(props?.capabilities[capabilityWithNumValueIdx])
-  }
-  if (props?.capabilities && props?.capabilities[hsvIdx] && isDeviceOn.value) {
-    stuff.value.hsv = props?.capabilities[hsvIdx].hsv
-  }
-  if (props?.capabilities && props?.capabilities[capabilityWithFanModeId] && isDeviceFan.value) {
-    stuff.value = reactive(props?.capabilities[capabilityWithFanModeId])
-  }
-}
-
-setDisplayedStuff()
 
 onLongPress(service, () => {
   isCapabilitiesShow.value = true
 }, { delay: 400 })
 
-watch(props, (value) => {
-  const newIsDeviceOn = value.capabilities?.find(el => el.type === 'devices.capabilities.on_off')?.value
-  const newIsDeviceOpen = value.capabilities?.find(el => el.instance === 'open' || el.type === 'devices.types.openable.garage')?.value
-  isDeviceOn.value = newIsDeviceOn
-  isDeviceOpen.value = newIsDeviceOpen
-  setDisplayedStuff()
-}, { deep: true })
+
 
 onMounted(() => {
   setTimeout(() => {
     isMounted.value = true
-    console.log(turnOn.value)
     window.addEventListener('contextmenu', (e) => {
       e.preventDefault()
     })
   }, 100)
 })
-
 onUnmounted(() => {
   window.removeEventListener('contextmenu', () => {})
 })

@@ -1,65 +1,97 @@
 <template>
-  <button class="ui-button" :class="`ui-button--${variant}`" :disabled="disabled" :type="type">
+  <button
+    :class="`ui-button --${className}  ${fill.length
+      ?'--fill':''} ${rounded!==0?'--rounded':''} ${centered!==0?'--centred':''} ${padding!==0?'--padding':''}`"
+    :type="type"
+  >
     <slot />
   </button>
 </template>
 
 <script setup lang="ts">
-export interface IUiButton {
-  variant?: 'blank' | 'primary' | 'secondary' | 'icon'
-  type?: 'button' | 'submit' | 'reset'
-  disabled?: boolean
+export interface IUiButton{
+  className?:'default'|'delete'|'delete-outline'|'blank'
+  type?:'button'|'submit'|'reset'
+  marginInline?:string
+  fill?: string
+  rounded?:string
+  padding?:string
+  centered?:boolean
+  bgColor?:string
 }
 const props = withDefaults(defineProps<IUiButton>(), {
-  variant: 'blank',
+  className: 'default',
   type: 'button',
-  disabled: false,
+  marginInline: 'auto',
+  fill: '',
+  rounded: '0',
+  padding: '8px 12px',
+  centred: false,
+  bgColor: '',
 })
 </script>
 
 <style lang="scss">
-.ui-button {
+.ui-button{
   @include button;
   display: block;
+  margin-inline: v-bind(marginInline);
+  padding: v-bind(padding);
   border: 0;
-  border-radius: 12px;
-  padding: 12px 0;
-  align-items: center;
+  border-radius: 15px;
   cursor: pointer;
-  font-weight: 700;
-  transition: all 0.25s;
-  width: 100%;
-
-  &:disabled {
+  &:disabled{
+    filter: grayscale(.8);
     cursor: not-allowed;
-    background-color: $color-bg-hover;
-    color: $color-translucent;
   }
-
-  &--primary {
-    background-color: $color-active;
-    color: #fff;
-
-    &:hover {
-      background-color: $color-active-hover;
-    }
+  &:not(.--fill){
+   background: $color-active;
   }
-
-  &--secondary {
-    background-color: $color-bg-secondary;
-
-    &:hover {
-      background-color: $color-bg-secondary-hover;
-    }
+  &.--fill{
+    background: v-bind(fill);
   }
-
-  &--blank {
-    width: fit-content;
+  &.--rounded{
+    border-radius: v-bind(rounded);
+  }
+  &.--centred {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &.--blank{
+    display: flex;
     outline: none;
     margin-inline: 0;
+    &:not(.--fill){
+     background: transparent;
+    }
+    &:not(.--padding){
+      padding: 0;
+    }
+    &:not(.--rounded){
+      border-radius: 0;
+    }
+  }
+  &.--default{
+    color: $bg-primary;
+    &:not(.--fill){
+      background: $color-active;
+    }
+  }
+  &.--delete{
+    color: $bg-primary;
+    background: #D15151
+  }
+  &.--delete-outline{
+    color: #D15151;
+    border: 2px solid #D15151;
+    padding: 8px 24px;
     background: transparent;
-    padding: 0;
-    border-radius: 0;
+    transition: background, color .2s;
+    &:hover{
+      background: #D15151;
+      color: $color-primary;
+    }
   }
 }
 </style>

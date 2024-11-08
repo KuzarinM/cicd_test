@@ -34,15 +34,6 @@
       />
       <auth-form-input
         v-if="step===1"
-        name="password1"
-        :value="password1"
-        label="Подтвердите пароль"
-        type="password"
-        :required="true"
-        @auth-input="(newVal)=>password1=newVal"
-      />
-      <auth-form-input
-        v-if="step===1"
         name="clientId"
         :value="clientId"
         label="ClientID"
@@ -62,7 +53,7 @@
         :required="true"
         @auth-input="(newVal)=>confirmationCode=newVal"
       />
-      <input type="submit" :value="step === 1 ?`Регистрация`:`Подтвердить`" class="auth__form-submit">
+      <input type="submit" value="Регистрация" class="auth__form-submit">
       <NuxtLink to="/login" class="auth__form-submit --outline">
         Войти
       </NuxtLink>
@@ -86,7 +77,6 @@ const step = ref(1)
 const name = ref('')
 const email = ref('')
 const password = ref('')
-const password1 = ref('')
 const clientId = ref('')
 const confirmationCode = ref('')
 
@@ -94,12 +84,7 @@ async function register () {
   isLoading.value = true
   if (name.value.length >= 50) {
     useNotification('error', 'Имя не должно превышать 50 символов')
-    return isLoading.value = false
-  }
-  if (password.value != password1.value) {
-    console.log(password, password1)
-    useNotification('error', 'Пароли не совпадают')
-    return isLoading.value = false
+    return
   }
   const registrationData:IRegisterUserProps = {
     name: name.value,
@@ -115,7 +100,8 @@ async function register () {
   try {
     const refreshToken = await userStore.register(registrationData)
     isLoading.value = false
-    if (step.value === 1 && refreshToken === null) {
+    // console.log(refreshToken)
+    if (step.value === 1) {
       step.value = 2
       return
     }

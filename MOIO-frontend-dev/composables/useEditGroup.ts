@@ -1,6 +1,6 @@
 import { useGroupsStore } from "~/store/groups"
 
-export default async function useEditGroup (id:string, name:string, oldName:string, usersForRemove:{id:number, name:string}[], existingDevices?:{id: string, name:string, type:string}[], devices?:{id: string, name:string, type:string}[]) {
+export default async function useEditGroup (id:string, name:string, oldName:string, usersForRemove:{id:number, name:string}[], existingDevices?:{id: string, name: string}[], devices?:{id: string, name: string}[]) {
   if (!name?.length || !oldName?.length) {
     useNotification('error', 'Введите название группы')
     return false

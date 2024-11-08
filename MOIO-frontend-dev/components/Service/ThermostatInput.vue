@@ -2,86 +2,78 @@
   <div ref="thermostat" class="thermostat-input">
     <input
       id="range"
+      ref="range"
       v-model="p"
       type="range"
-      :min="min"
-      :max="max"
-      :step="step||1"
+      :min="0"
+      :max="100"
+      :step="props.step||1"
       hidden
     >
-    <div class="thermostat-input__output">
-      <p class="thermostat-input__value">
-        {{ value }}°C
-      </p>
-      <p class="thermostat-input__text">
-        Установленная температура
-      </p>
+    <div class="thermostat-input__range-border --min">
+      {{ min }}C
     </div>
-
-    <div ref="slider" class="thermostat-input__range">
-      <div ref="dragArea" class="thermostat-input__drag-area" />
-      <svg ref="svg" xmlns="http://www.w3.org/2000/svg">
-        <circle
-          ref="path"
-          fill="none"
-          stroke="#212433"
-          stroke-linecap="round"
-          stroke-width="12"
-          :r="radius"
-          :cx="cx"
-          :cy="cx"
-          :stroke-dasharray="dasharray"
-          :stroke-dashoffset="dashoffset"
-        />
-        <circle
-          ref="progress"
-          class="thermostat-input__progress"
-          fill="none"
-          stroke="#E387FF"
-          stroke-linecap="round"
-          :stroke-width="strokeW"
-          :r="radius"
-          :cx="cx"
-          :cy="cx"
-          :stroke-dashoffset="dashoffset"
-        />
-        <circle
-          id="current"
-          ref="currentMark"
-          fill="#32be55"
-          class="thermostat-svg__current"
-          r="4"
-        />
-        <circle
-          id="thumb"
-          ref="thumb"
-          :r="thumbRad"
-          cx="120.379"
-          cy="120.379"
-          fill="#B2D0F3"
-        />
-      </svg>
+    <label id="output" for="range" class="thermostat-input__value">
+      {{ value }}C
+    </label>
+    <div class="thermostat-input__range-border --max">
+      {{ max }}C
     </div>
-
+    <svg
+      ref="svg"
+      class="thermostat-svg"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 260 260"
+      fill="none"
+    >
+      <path
+        id="track"
+        ref="track"
+        d="M 240 240 A 1 1 0 0 0 0 240"
+        fill="none"
+        stroke="#212433" stroke-width="12"
+        stroke-linecap="round"
+      />
+      <path
+        id="progress"
+        ref="progress"
+        class="thermostat-svg__progress"
+        d="M 240 240 A 1 1 0 0 0 0 240"
+        fill="none"
+        stroke-width="12" stroke-linecap="round"
+      />
+      <circle
+        id="current"
+        ref="currentMark"
+        class="thermostat-svg__current"
+        r="4"
+        cx="108"
+        cy="108"
+        fill="#32be55"
+        style="pointer-events: bounding-box"
+      />
+      <circle
+        id="thumb"
+        ref="thumb"
+        r="14"
+        cx="120.379"
+        cy="120.379"
+        fill="#B2D0F3"
+      />
+    </svg>
     <div class="thermostat-input__controls">
       <button
         class="thermostat-input__controls-action blank"
-        :disabled="!(p < max)"
-        @click.prevent="setValueByNumber(p + 1)"
+        :disabled="p>=100"
+        @click.prevent="p=getSliderValue(value + step);updateSliderValue(p,5);thermostatAction()"
       >
-        <span class="thermostat-input__controls-text">
-          {{ max }}°C
-        </span>
         +
       </button>
       <button
         class="thermostat-input__controls-action blank"
-        :disabled="!(p > min)"
-        @click.prevent="setValueByNumber(p - 1)"
+        :disabled="p<=0"
+        @click.prevent="p=getSliderValue(value - step);updateSliderValue(p,5);thermostatAction()"
       >
-        <span class="thermostat-input__controls-text">
-          {{ min }}°C
-        </span>
         -
       </button>
     </div>
@@ -97,127 +89,187 @@ export interface IThermostatProps {
   step:number
   current?:number
 }
-const { value, min, max, step, current } = defineProps<IThermostatProps>()
+const props = defineProps<IThermostatProps>()
 
 const emit = defineEmits(['t-input'])
-const p = ref(value)
-
-// elements
+const p = ref(getSliderValue(props.value))
+const range = ref<InstanceType<typeof SVGElement>>()
 const svg = ref<InstanceType<typeof SVGElement>>()
-const path = ref<InstanceType<typeof SVGElement>>()
 const progress = ref<InstanceType<typeof SVGElement>>()
+const track = ref<InstanceType<typeof SVGGeometryElement>>()
 const currentMark = ref<InstanceType<typeof SVGElement>>()
 const thumb = ref<InstanceType<typeof SVGElement>>()
 const thermostat = ref<InstanceType<typeof HTMLDivElement>>()
-const dragArea = ref<InstanceType<typeof HTMLDivElement>>()
-const slider = ref<InstanceType<typeof HTMLDivElement>>()
-const thumbRad = 14
 
-const currentStep = computed(() => p.value - min)
-const totalSteps = computed(() => max - min)
-const isMoving = ref(false)
-
-// sizes
-const height = 230
-const strokeW = 12
-const cx = computed(() => height / 2)
-const radius = computed(() => height / 2 - strokeW - thumbRad)
-const dasharray = computed(() => Math.PI * radius.value)
-const stepSize = computed(() => dashoffset.value / (totalSteps.value))
-const dashoffset = ref(0)
-const centerX = computed(() => slider.value!.getBoundingClientRect().left + slider.value!.clientWidth / 2)
-const centerY = computed(() => slider.value!.getBoundingClientRect().top + slider.value!.clientHeight / 2)
-
-function emitSliderValue (newP = p.value, delay:number) {
-  emit('t-input', { value: newP, delay: 2000 })
-}
-
-watch(p, (newVal) => {
-  renderTrack()
-  renderThumb()
-  emitSliderValue(newVal, 2000)
+watch(p, (newP) => {
+  updateSliderValue(newP, 2000)
 })
-
-// calculate progress
-const setValueByPercents = (percents: number) => {
-  p.value = Math.round((min + ((totalSteps.value) * percents)) / step) * step
+const stepped = (val:number, divider:number) => {
+  return (Math.floor((val + divider - 1) / divider)) * divider
 }
-
-const setValueByNumber = (value: number) => {
-  p.value = value
+function getSliderValue (value:number) {
+  const max = props.max - props.min
+  const flex = value - props.min
+  return (flex / max) * 100
 }
-
-// render
-const renderSvg = (h = 216) => {
-  dashoffset.value = dasharray.value
-  svg.value?.setAttribute('viewBox', `0 0 ${h} ${h}`)
-  renderTrack()
-  renderThumb()
-  renderThumb(true)
+function updateSliderValue (newP = p.value, delay:number) {
+  const unStepped = (props.max - props.min) * (newP / 100) + props.min
+  emit('t-input', { value: Number((stepped(unStepped, (props.step || 1)) + 1 - props.step).toFixed(2)), delay })
 }
-
-const renderTrack = () => {
-  progress.value?.setAttribute('stroke-dasharray', `${stepSize.value * currentStep.value}  ${dasharray.value * 2 - (stepSize.value * currentStep.value)}`)
-}
-
-const renderThumb = (isCurrent?: boolean) => {
-  const normalizedValue = ((isCurrent ? current ?? 0 : p.value) - min) / (max - min)
-  const clampedValue = Math.max(0, Math.min(1, normalizedValue))
-  const angle = Math.PI * (1 - clampedValue)
-  const x = radius.value * Math.cos(angle)
-  const y = radius.value * Math.sin(angle)
-
-  if (isCurrent) {
-    currentMark.value?.setAttribute('cx', `${radius.value + x + thumbRad + 12}`)
-    currentMark.value?.setAttribute('cy', `${radius.value - y + thumbRad + 12}`)
-    return
+const cache:{[key:string]:{[key:string]:any}} = {}
+function memoize (fn:Function, key:string, args:any) {
+  if (cache[key] && cache[key][args.toString()]) {
+    return cache[key][args.toString()]
   }
-
-  thumb.value?.setAttribute('cx', `${radius.value + x + thumbRad * 2}`)
-  thumb.value?.setAttribute('cy', `${radius.value - y + thumbRad * 2}`)
+  const data = fn(...args)
+  cache[key] = {}
+  cache[key][args.toString()] = data
+  return data
 }
+function thermostatAction () {
+  if (thermostat?.value) {
+    let isMoving = false
+    const stepAttr = props.step || 1
+    const maxOfRange = parseFloat(range.value?.getAttribute('max') as string) || 100
+    const minOfRange = parseFloat(range.value?.getAttribute('min') as string) || 1
+    const steps = ((maxOfRange - minOfRange) / stepAttr)
 
-const slide = (event: MouseEvent & TouchEvent) => {
-  if (!isMoving.value) { return }
+    const getPoints = (trackLength:number) => {
+      const points = []
+      const step = trackLength / steps
+      let progressLength = 0
+      while (progressLength <= trackLength + 1) {
+        const DOMPoint = track.value?.getPointAtLength(progressLength)
+        points.push({ x: Number(DOMPoint?.x.toFixed(3)), y: Number(DOMPoint?.y.toFixed(3)), d: Number(progressLength) })
+        progressLength += step
+      }
+      return points
+    }
 
-  const e = event?.touches ? event.touches[0] : event
-  const deltaX = e.clientX - centerX.value
-  const deltaY = e.clientY - centerY.value
+    const setPath = (value:number) => {
+      const percentage = (value / maxOfRange)
+      if (progress.value && track.value) {
+        progress.value.style.strokeDasharray = `${track.value.getTotalLength() * percentage} 1000`
+      }
+    }
+    const setThumb = () => {
+      const points = memoize(getPoints, 'points', [track.value?.getTotalLength()])
+      const newVal = Number(p.value)
+      const index = Math.max(1, newVal) / stepAttr
+      const point = points[Number(index.toFixed())] ? points[Number(index.toFixed())] : points[points?.length - 1]
+      setCurrentSvg()
+      thumb.value?.setAttribute('cx', point.x)
+      thumb.value?.setAttribute('cy', point.y)
+    }
+    const setCurrentSvg = () => {
+      if (props.current) {
+        const points = memoize(getPoints, 'points', [track.value?.getTotalLength()])
+        const newVal = Number(getSliderValue(props.current))
+        const index = Math.max(1, newVal) / stepAttr
+        const point = points[Number(index.toFixed())] ? points[Number(index.toFixed())] : points[points?.length - 1]
+        currentMark.value?.setAttribute('cx', point.x)
+        currentMark.value?.setAttribute('cy', (point.y * 1.01).toFixed(2))
+      }
+    }
+    const getClosestPoint = (x:number, y:number) => {
+      const distances:number[][] = []
+      const points = memoize(getPoints, 'points', [track.value?.getTotalLength()])
+      points.forEach((point:{x:number, y:number, d:number}, index:number) => {
+        const diffX = x - point.x
+        const diffY = y - point.y
+        const distance = Math.sqrt((diffX * diffX) + (diffY * diffY)).toFixed(3)
+        distances.push([index, parseFloat(distance)])
+      })
+      distances.sort((a, b) => a[1] - b[1])
+      return points[distances[0][0]]
+    }
+    const render = (e:MouseEvent&TouchEvent) => {
+      if (isMoving) {
+        const rect = svg.value?.getBoundingClientRect()
+        const trackLength = track.value?.getTotalLength()
+        if (e?.touches) { e = e.touches[0] }
+        const pos = {
+          x: Number((e.clientX - (rect?.left ?? 0)).toFixed(3)),
+          y: Number((e.clientY - (rect?.top ?? 0)).toFixed(3)),
+        }
+        const target = getClosestPoint(pos.x, pos.y)
+        const covered = Math.round(target.d * maxOfRange / (trackLength ?? 1))
 
-  const angleRad = Math.atan2(deltaY, deltaX)
-  const angleDeg = angleRad * 180 / Math.PI
+        thumb.value?.setAttribute('cx', target.x)
+        thumb.value?.setAttribute('cy', target.y)
+        setPath(covered)
+        p.value = covered
+      }
+    }
+    const setSVG = (w = 216, h = 216) => {
+      svg.value?.setAttribute('width', `${w * 1.12}`)
+      svg.value?.setAttribute('height', `${h * 1.12}`)
+      svg.value?.setAttribute('viewBox', `0 ${w * 0.4} ${w} ${h * 1.12}`)
+      track.value?.setAttribute('d', `M 0 ${w} A ${w / 2} ${w / 2} 0 0 1 ${w} ${w}`)
+      track.value?.setAttribute('stroke-width', '12')
+      progress.value?.setAttribute('d', `M 0 ${w} A ${w / 2} ${w / 2} 0 0 1 ${w} ${w}`)
+      progress.value?.setAttribute('stroke-width', '12')
+      thumb.value?.setAttribute('stroke-width', '8')
+      thumb.value?.setAttribute('r', '14')
+      setPath(p.value)
+    }
+    // sorry for that
 
-  const rotationAngle = (angleDeg + 180) % 360
-  if (rotationAngle <= 180) {
-    const progressPercent = rotationAngle / 180
-    setValueByPercents(progressPercent)
+    const capabilityModal = range.value?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement
+    const dragEnd = () => {
+      isMoving = false
+      if (capabilityModal?.style) {
+        capabilityModal.style.overflowY = 'auto'
+      }
+      if (svg.value?.classList) {
+        svg.value.classList.remove('moving')
+      }
+    }
+
+    const dragStart = () => {
+      isMoving = true
+      if (capabilityModal?.style) {
+        capabilityModal.style.overflowY = 'hidden'
+      }
+
+      if (svg.value?.classList) {
+        svg.value.classList.add('moving')
+      }
+    }
+
+
+    range.value?.addEventListener('input', () => {
+      range.value?.classList.remove('has-focus')
+      setPath(p.value)
+      setThumb()
+    })
+
+    svg.value?.addEventListener('mousedown', (e) => {
+      dragStart()
+      render(e as MouseEvent & TouchEvent)
+    })
+    thumb.value?.addEventListener('mousedown', () => {
+      dragStart()
+      svg.value?.addEventListener('mousemove', e => render(e as MouseEvent & TouchEvent))
+    })
+
+    thumb.value?.addEventListener('touchstart', () => {
+      dragStart()
+      thumb.value?.addEventListener('touchmove', e => render(e as MouseEvent & TouchEvent))
+    }, { passive: true })
+    window.addEventListener('mouseup', dragEnd)
+    window.addEventListener('touchend', dragEnd)
+    setSVG()
+    memoize(getPoints, 'points', [track.value?.getTotalLength()])
+    setThumb()
+    setPath(p.value)
   }
 }
-
 onMounted(() => {
-  renderSvg(height)
-  dragArea.value?.addEventListener('mousedown', (event: MouseEvent) => {
-    isMoving.value = true
-    slide(event as MouseEvent & TouchEvent)
-  })
-  dragArea.value?.addEventListener('touchstart', () => (event: TouchEvent) => {
-    isMoving.value = true
-    slide(event as MouseEvent & TouchEvent)
-  })
-  dragArea.value?.addEventListener('mousemove', (event: MouseEvent) => { slide(event as MouseEvent & TouchEvent) })
-  dragArea.value?.addEventListener('touchmove', (event: TouchEvent) => {
-    isMoving.value = true
-    slide(event as MouseEvent & TouchEvent)
-  })
-  window.addEventListener('mouseup', () => { isMoving.value = false })
-  window.addEventListener('touchend', () => { isMoving.value = false })
+  thermostatAction()
 })
 
 onUnmounted(() => {
-  dragArea.value?.removeEventListener('mousedown', () => {})
-  dragArea.value?.removeEventListener('touchstart', () => {})
-  dragArea.value?.removeEventListener('mousemove', () => {})
-  dragArea.value?.removeEventListener('touchmove', () => {})
   window.removeEventListener('mouseup', () => {})
   window.removeEventListener('touchend', () => {})
 })

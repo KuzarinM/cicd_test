@@ -1,54 +1,9 @@
 .--scenario{
-	&.--automation{
-		border: 1px solid $color-bg-switch;
-	}
-	.service-stuff{
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		color: #fff;
-	}
-	&.--active {
-		cursor: pointer;
-		//box-shadow: 0px 0px 30px 0px rgb($service-shadow-color / 1);
-		//-webkit-box-shadow: 0px 0px 30px 0px rgb($service-shadow-color / 1);
-		border-color: rgba(0, 196, 241, 1) !important;
-		background: $bg-service-active;
-		.service-name{
-		  span{
-			color: #fff;
-		  }
-		} 
-		.service-info__state{
-			color: #fff;
-		}
-		.service-ico-wrapper {
-		  transition: color .1s;
-		  position: relative;
-		  &__color{
-			width: 15px;
-			height: 15px;
-			border-radius: 100%;
-			border: 1px solid;
-			position: absolute;
-			left: 27px;
-		  }
-		  .ui-icon{
-			transition: color .1s;
-			color: #fff !important;
-		  }
-		}
-	  }
 	.service-capabilities-modal{
-		padding: 20px;
-		border-radius: 32px;
+		padding: 10px;
+		border-radius: 24px;
 	}
 	.service-capabilities-modal__header{
 		top: -8px;
-	}
-	.checked{
-		position: absolute;
-		top: 12px;
-		right: 12px;
 	}
 }

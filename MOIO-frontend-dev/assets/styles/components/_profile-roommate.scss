@@ -1,20 +1,30 @@
 .roommates-card{
-  cursor: pointer;
   display: flex;
   align-items: center;
-  background: $bg-service-primary;
-  border-radius: 12px;
-  padding: 20px;
+  background: $bg-primary;
+  padding: 18px;
+  padding-inline-end: 30px;
+  border-radius: 16px;
+  @media screen and (max-width: 768px){
+    flex-wrap:wrap;
+    padding-inline-end: 18px;
+    .ui-button{
+      margin-top: 16px;
+      &.--delete-outline{
+        width: calc(100% - 40px);
+      }
+    }
+  }
   &__avatar{
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border-radius: 100%;
     display: block;
     @media screen and (max-width: 768px){
       margin-inline: auto;
     }
     &.--blank{
-      background: $color-active;
+      background: linear-gradient(180deg, $avatar-bg-gradient-start 0%, $avatar-bg-gradient-end 100%);
     }
   }
   &__chevron{
@@ -25,44 +35,34 @@
     }
   }
   .roommates-card-info{
-    margin-left: 12px;
+    margin-left: 18px;
     width: 50%;
     margin-inline-end: auto;
-    white-space: nowrap;
-    font-weight: 700;
     @media screen and (max-width: 768px){
       width: 100%;
+      margin-inline: 0;
     }
     &__is-pending{
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 22px;
-      color: $color-profile-mail;
+      @include carousel-category-item;
+      color: $color-active;
+      margin-top: 4px;
+      &.--pending{
+        color: $color-primary;
+      }
     }
     
     &__name{
-      @include action-item;
-      font-weight: 500;
-      font-size: 12px;
-      font-style: normal;
-      line-height: 16px;
-      color: $color-profile-name;
-    }
-    &__delete{
-      margin-left: 10px;
-      z-index: 100;
+      @include action-item
     }
     &__role {
-      
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
       word-break: break-word;
+      margin-top: 8px;
       span {
-      display: none;
-      font-size: 10px;
-      font-weight: 400;
+      @include carousel-category-item;
         &::after {
           content: attr(data-end);
         }

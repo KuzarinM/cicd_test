@@ -4,9 +4,16 @@ import type { IUsersByGroupResponse } from "~/api/group/getUsersByGroupId"
 
 async function getDevicesByGroupId (id:string) {
   const groupStore = useGroupsStore()
-  // TODO переделать на фильтр без лишних запросов
-  const { devices } = await groupStore.getGroupById(id)
-  return devices
+  const result:{id:string, name:string}[] = []
+  const devices = await groupStore.getDevicesByGroupId(id)
+  if (devices) {
+    for (const val of Object.values(devices)) {
+      result.push(...val.map((el) => {
+        return { id: el.id, name: el.name }
+      }))
+    }
+  }
+  return result
 }
 export default async function useDataForGroupEdit (id:string) {
   const groupStore = useGroupsStore()

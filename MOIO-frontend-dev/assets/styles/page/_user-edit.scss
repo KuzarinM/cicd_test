@@ -1,4 +1,8 @@
 .user-edit{
+	padding-inline: 48px;
+	@media screen and (max-width: 560px){
+		padding-inline: 20px;
+	}
 	&__header{
 		font-size: 30px;
 		font-weight: 700;
@@ -8,33 +12,34 @@
 		@include capabilities-modal-header;
 	}
 	&__container{
+		padding-inline: 24px;
 		@media screen and (max-width: 560px){
 			padding-inline: 0;
 		}
-	}
-	&__button {
-		margin-top: 40px;
-		width: min(400px, 100%);
+		.ui-button{
+			margin-top: 36px;
+		}
+
 	}
 	&__input-group{
 		display: flex;
 		flex-direction: column;
 		margin-top: 28px;
+		padding-inline: 24px;
 		width: min(360px, 100%);
+		@media screen and (max-width: 560px){
+			padding-inline: 12px;
+		}
 		&-label{
 			@include carousel-category-item;
 		}
 		&-input{
-			background: none;
+			border-radius: 12px;
+			background: $settings-color;
 			border: none;
 			margin-top: 8px;
-			padding: 8px 0 8px 0;
-			font-size: 16px;
-			border-bottom: 1px solid $color-border;
-			&:focus{
-				outline: none;
-				border-bottom: 1px solid $color-primary;
-			}
+			padding:8px  16px;
+			font-size: 20px;
 		}
 	}
 }

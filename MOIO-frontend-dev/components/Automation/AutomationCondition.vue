@@ -1,166 +1,118 @@
 <template>
-  <div class="scrollable-content">
-    <div class="automation-condition">
-      <h2 class="automation-condition__header">
-        Условие {{ idx }}
-        <ui-button
-          v-if="neww && (show && idx === newConditions)"
-          margin-inline="0"
-          padding="0"
-          class="automation-condition__next"
-          @click="editable&&
-            saveTimeHandle()"
-        >
-          Далее
-        </ui-button>
-      </h2>
-
-      <div class="automation-condition__body">
-        <div class="automation-condition__description">
-          {{ !type.includes('time')
-            ? 'Сценарий выполняется если сработал датчик'
-            : 'Время активности автоматизации:'
-          }}
+  <div class="automation-condition">
+    <h2 class="automation-condition__header">
+      Условие {{ idx }}
+    </h2>
+    <div class="automation-condition__body">
+      <div class="automation-condition__description">
+        {{ !type.includes('time')
+          ? 'Сценарий выполняется если сработал датчик'
+          : 'Время начала активности автоматизации:'
+        }}
+      </div>
+      <div
+        v-if="type===AutomationConditionTypesEnum.time"
+        class="automation-condition__time"
+      >
+        <div class="automation-condition__time-offset">
+          {{ timeOffset ? timeOffset[0] : '' }}
         </div>
-        <div v-if="type===AutomationConditionTypesEnum.time && !neww || (type===AutomationConditionTypesEnum.time && neww && !(idx === newConditions) || type===AutomationConditionTypesEnum.time&& (!show && idx === newConditions))" class="automation-condition__description">
-          В определённое время - {{ time3 }}
+        <div class="automation-condition__time-value">
+          <span v-if="!editable" class="time">
+            {{ time }}
+          </span>
+          <input
+            v-if="editable"
+            ref="timeInput"
+            v-model="timePoint"
+            type="time"
+            :disabled="Number(editable) === 0"
+            @keydown.enter.stop="false"
+            @keydown.enter.prevent="false"
+          > часов
         </div>
-        <div v-if="type===AutomationConditionTypesEnum.timeRange && !neww" class="automation-condition__description">
-          В интервале {{ time1 }} - {{ time2 }}
+      </div>
+      <div
+        v-if="type === AutomationConditionTypesEnum.timeRange"
+        class="automation-condition__time"
+      >
+        <div class="automation-condition__time-offset">
+          {{ timeOffset ? timeOffset[0] : '' }}
         </div>
-        <div
-          v-if="type===AutomationConditionTypesEnum.time && (neww && (show && idx === newConditions))"
-          class="automation-condition__time"
-        >
-          <div class="automation-select-range__tab-value-condition-list">
-            <div
-              :class="`automation-select-range__tab-value-condition-item`"
-              @click="condition.value = 1"
-            >
-              <ui-checkbox
-                :initial-bg="'var(--settings-color)'"
-                :checked="condition.value === 1"
-                @check="condition.value = 1"
-              />
-              Восход солнца
-            </div>
-
-            <div
-              :class="`automation-select-range__tab-value-condition-item`"
-              @click="condition.value = 0"
-            >
-              <ui-checkbox
-                :initial-bg="'var(--settings-color)'"
-                :checked="condition.value === 0"
-                @check="condition.value = 0"
-              />
-              Закат
-            </div>
-            <div
-              :class="`automation-select-range__tab-value-condition-item`"
-              @click="condition.value = 2"
-            >
-              <ui-checkbox
-                :initial-bg="'var(--settings-color)'"
-                :checked="condition.value === 2"
-                @check="condition.value = 2"
-              />
-              В определённое время <span v-if="condition.value === 2" class="selected"> {{ `${scrollPickerModal2[0]}:${scrollPickerModal2[1]}` }}</span>
-            </div>
-          </div>
-          <ScrollPicker
-            v-if="condition.value === 2"
-            v-model="scrollPickerModal2"
-            :options="options"
-          />
-        </div>
-        <div
-          v-if="type === AutomationConditionTypesEnum.timeRange && (neww)"
-          class="automation-condition__time"
-        >
-          В интервале <span class="selected" @click="condition.time = 0">{{ `${scrollPickerModal[0]}:${scrollPickerModal[1]}` }}</span> - <span class="selected" @click="condition.time = 1">{{ `${scrollPickerModal1[0]}:${scrollPickerModal1[1]}` }}</span>
-          <span
-            v-if="neww && (savedTime1 != time1 || savedTime2 != time2) && (time1 !='00:00' || time2 != '00:00') && !show"
-            class="savetime"
-            @click="emit('selectOption',
-                        {
-                          type: AutomationConditionTypesEnum.timeRange,
-                          value: {
-                            timeRange: {
-                              startTime: time1,
-                              endTime: time2,
-                            },
-                          },
-                        }
-            );savedTime1 = time1; savedTime2 = time2; condition.time=2"
-          >Сохранить изменения</span>
-          <ScrollPicker
-            v-if="condition.time === 0"
-            v-model="scrollPickerModal"
-            :options="options"
-          />
-          <ScrollPicker
-            v-if="condition.time === 1"
-            v-model="scrollPickerModal1"
-            :options="options"
-          />
-        </div>
-        <transition name="add-menu">
-          <div
-            v-if="type === AutomationConditionTypesEnum.sensor ||
-              type === AutomationConditionTypesEnum.temperature"
-            class="automation-condition__sensors"
+        <div class="automation-condition__time-value">
+          <span v-if="!editable" class="time">
+            {{ timeRange?.startTime ?? 'err' }}
+          </span>
+          <input
+            v-if="editable"
+            ref="timeInput"
+            v-model="timeStart"
+            type="time"
+            name=""
+            :disabled="Number(editable) === 0"
+            @keydown.enter.stop="false"
+            @keydown.enter.prevent="false"
           >
-            <template
-              v-for="sensor in sensors"
-              :key="sensor.id"
+          -
+          <span v-if="!editable" class="time">
+            {{ timeRange?.endTime ?? 'err' }}
+          </span>
+          <input
+            v-if="editable"
+            ref="timeInput"
+            v-model="timeEnd"
+            type="time"
+            name=""
+            :disabled="Number(editable) === 0"
+            @keydown.enter.stop="false"
+            @keydown.enter.prevent="false"
+          >
+          часов
+        </div>
+      </div>
+      <div
+        v-if="type === AutomationConditionTypesEnum.sensor ||
+          type === AutomationConditionTypesEnum.temperature"
+        class="automation-condition__sensors"
+      >
+        <div
+          v-for="sensor in sensors"
+          :key="sensor.id"
+          :class="`automation-condition__sensor ${editable?'--editable':''}`"
+          @click="editable&&emit('selectOption',{type, value:{deviceId:sensor.id}})"
+        >
+          <ui-icon
+            :name="useIcoByDeviceType(sensor.type).name"
+            size="28"
+          />
+          <span :class="`mask ${sensor.id === deviceId &&' --active'}`" />
+          <div class="automation-condition__sensor-info">
+            {{ sensor.name }}
+            <div
+              v-if="(temperatureRange||automationCondition) && sensor.id === deviceId"
+              class="automation-condition__sensor-value"
             >
-              <div
-                v-if="sensor.id === deviceId || (show && idx === newConditions)"
-                :class="`automation-condition__sensor ${sensor.id === deviceId ? ' --active' : ''} --editable`"
-                :disabled="true"
-                @click="(show && idx === newConditions) ? emit('selectOption',{type, value:{deviceId:sensor.id}}) : ''"
-              >
-                <span :class="`mask ${sensor.id === deviceId ? ' --active' : ''}`" />
-                <div class="automation-condition__sensor-info">
-                  <div class="automation-condition__sensor-info__check">
-                    <ui-icon
-                      :name="useIcoByDeviceType(sensor.type).name"
-                      size="28"
-                    />
-                  </div>
-                  {{ sensor.name }}
-                  <div
-                    v-if="(temperatureRange||automationCondition) && sensor.id === deviceId"
-                    class="automation-condition__sensor-value"
-                  >
-                    {{ temperatureRange&&temperatureRange.min + '°C-' + temperatureRange.max + '°C' }}
-                    {{ automationCondition&&automationCondition.value + '°C' }}
-                  </div>
-                </div>
-                <span
-                  v-if="automationCondition && sensor.id === deviceId"
-                  class="automation-condition__sensor-condition"
-                >
-                  {{ conditionSymbols[automationCondition.condition] }}
-                </span>
-              </div>
-            </template>
+              {{ temperatureRange&&temperatureRange.min + '°C-' + temperatureRange.max + '°C' }}
+              {{ automationCondition&&automationCondition.value + '°C' }}
+            </div>
           </div>
-        </transition>
+          <span
+            v-if="automationCondition && sensor.id === deviceId"
+            class="automation-condition__sensor-condition"
+          >
+            {{ conditionSymbols[automationCondition.condition] }}
+          </span>
+        </div>
       </div>
     </div>
-    <slot name="delete"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import ScrollPicker from 'vue3-scroll-picker'
 import UiIcon from "~/components/ui/UiIcon.vue"
-import type { ICapability } from "~/components/Service/TheService.vue"
+import type { ICapability, ServiceProps } from "~/components/Service/TheService.vue"
 import type { IAutomationValue } from "~/api/automations/create"
 import { AutomationConditionTypesEnum } from "~/utils/enums"
-import type { IBaseCondition } from "~/pages/automation/create/index.vue"
 
 export type AutomationConditionTypes = AutomationConditionTypesEnum
 export interface AutomationConditionProps {
@@ -172,11 +124,7 @@ export interface AutomationConditionProps {
     type:string
     range?:ICapability["range"]
   }[],
-  termostat?: boolean
   editable?:boolean
-  neww?:boolean
-  show?:boolean
-  newConditions?:number
 }
 const props = withDefaults(defineProps<AutomationConditionProps & IAutomationValue>(),
   {
@@ -190,83 +138,57 @@ const props = withDefaults(defineProps<AutomationConditionProps & IAutomationVal
     range: undefined,
   },
 )
-interface ICondition {
-  value: 0|1|2
-  time?: 0|1|2
-}
-const emit = defineEmits<{
-    selectOption:[{type?:AutomationConditionTypes, value?:IAutomationValue}],
-    nextStep:[{step:number}]
-}>()
 
+const emit = defineEmits<{
+    selectOption:[{type:AutomationConditionTypes, value?:IAutomationValue}]
+}>()
+const timeOffset = Date()?.match(/GMT.\d\d?\d\d/gm)
 const conditionSymbols = ['<', '>', '=']
-const condition = ref<ICondition>({ value: 2 })
 const timeInput = ref<InstanceType<typeof HTMLInputElement>>()
-const savedTime1 = ref()
-const savedTime2 = ref()
-const options = computed(() => {
-  const arra:[{value:string, label:string}[], {value:string, label:string}[]] = [[], []]
-  for (let i = 0; i <= 23; i++) {
-    if (i <= 9) {
-      arra[0].push({ value: `0${i}`, label: `0${i}` })
-    } else {
-      arra[0].push({ value: `${i}`, label: `${i}` })
-    }
-  }
-  for (let j = 0; j <= 59; j++) {
-    if (j <= 9) {
-      arra[1].push({ value: `0${j}`, label: `0${j}` })
-    } else {
-      arra[1].push({ value: `${j}`, label: `${j}` })
-    }
-  }
-  return arra
+const timeInputStart = ref<InstanceType<typeof HTMLInputElement>>()
+const timeInputEnd = ref<InstanceType<typeof HTMLInputElement>>()
+const timePoint = props.type === 'time' && computed({
+  get () {
+    return props.time
+  },
+  set (value) {
+    emit('selectOption', { type: AutomationConditionTypesEnum.time, value: { time: value } })
+  },
 })
-const saveTimeHandle = () => {
-  if (props.type === AutomationConditionTypesEnum.timeRange) {
+const timeEnd = props.type === 'time-range' && computed({
+  get () {
+    return props.timeRange?.endTime ?? '00:00'
+  },
+  set (value) {
+    console.log(value)
     emit('selectOption', {
       type: AutomationConditionTypesEnum.timeRange,
       value: {
         timeRange: {
-          startTime: time1,
-          endTime: time2,
+          startTime: props.timeRange?.startTime ?? '00:00',
+          endTime: value,
         },
       },
     })
-    savedTime1.value = time1.value
-    savedTime2.value = time2.value
-    condition.value.time = 2
-  }
-  if (props.type === AutomationConditionTypesEnum.time) {
+  },
+})
+const timeStart = props.type === 'time-range' && computed({
+  get () {
+    return props.timeRange?.startTime ?? '00:00'
+  },
+  set (value) {
+    console.log(value)
     emit('selectOption', {
-      type: AutomationConditionTypesEnum.time,
+      type: AutomationConditionTypesEnum.timeRange,
       value: {
-        time: time3,
+        timeRange: {
+          startTime: value,
+          endTime: props.timeRange?.endTime ?? '00:00',
+        },
       },
     })
-  }
-  if (props.type === (AutomationConditionTypesEnum.temperature || AutomationConditionTypesEnum.sensor)) {
-    emit('nextStep', { step: 2 })
-  } else {
-    emit('nextStep', { step: 3 })
-  }
-}
-const scrollPickerModal = ref(props.timeRange?.startTime1 ?? ["00", "00"])
-const time1 = computed(() => `${scrollPickerModal.value[0]}:${scrollPickerModal.value[1]}`)
-const scrollPickerModal1 = ref(props.timeRange?.endTime1 ?? ["00", "00"])
-const time2 = computed(() => `${scrollPickerModal1.value[0]}:${scrollPickerModal1.value[1]}`)
-const scrollPickerModal2 = ref(props.time1 ?? ["00", "00"])
-const time3 = computed(() =>
-  condition.value.value === 2
-    ? `${scrollPickerModal2.value[0]}:${scrollPickerModal2.value[1]}`
-    : '' ||
-condition.value.value === 1
-      ? `06:00`
-      : '' ||
-condition.value.value === 0
-        ? `19:00`
-        : '',
-)
+  },
+})
 function openTimeSelect () {
   if (props.editable) {
     timeInput.value?.showPicker()
@@ -278,59 +200,5 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-
-  .column-content{
-    overflow: hidden !important;
-  }
-
-.add-menu-enter-active,
-.add-menu-leave-active {
-  transition: all 1s ease;
-}
-
-.add-menu-enter-from,
-.add-menu-leave-to {
-  transform: translateY(-100%);
-}
-.add-menu-enter-to,
-.add-menu-leave-from {
-  transform: translateY(0);
-}
 @import "assets/styles/components/automation-condition";
-  .selected{
-    color: $color-active;
-    cursor: pointer;
-    &:hover{
-      text-decoration: underline;
-    }
-  }
-.pad-bottom-overlay-custom{
-  background: none !important;
-}
-.pad-top-overlay-custom{
-  background: none !important;
-}
-.scroll-picker-container{
-  justify-content: flex-start !important;
-  width: 100px !important;
-}
-
-.scroll-picker-item-custom-option{
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  height: 45px;
-  font-weight: 700;
-  font-size: 20px;
-}
-.savetime{
-  margin-left: 20px;
-  background-color: $bg-service-primary;
-  border-radius: 12px;
-  cursor: pointer;
-  padding: 10px;
-  &:hover{
-    color: $color-active;
-  }
-}
 </style>

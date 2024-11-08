@@ -1,24 +1,8 @@
 .scenarios {
-	@media screen and (max-width:1200px) {
-		padding-bottom: 80px;
-	}
 	&__header{
-		@include section-header;
-		width: 70%;
-		color: #fff;
-	}
-	&__save{
-		display: flex;
-		gap: 8px;
-		margin-top: 60px;
-		&-btn{
-			width: 224px;
-			color: #fff !important;
-			background-color: rgba(255,255,255,0.2) !important;
-			&:hover{
-				background-color: $color-active !important;
-			}
-		}
+		font-size: 40px;
+		font-weight: 600;
+		text-align: center;
 	}
 	.scenarios-available{
 		&__header {
@@ -28,37 +12,39 @@
 			text-align: center;
 		}
 		&__list{
-			margin-top: 60px;
+			padding-inline: min(200px, 20%);
+			margin-top: 24px;
 			display: flex;
 			flex-wrap: wrap;
-			gap:12px;
+			gap:48px;
 			&-item{
 				display: flex;
-				align-items: center;
-				gap: 10px;
+				flex-direction: column;
 				justify-content: space-between;
-				background: $bg-primary;
+				background: $settings-color;
 				padding: 20px;
 				position: relative;
 				font-size: 20px;
 				font-weight: 600;
-				min-height: 73px;
-				width: calc(36% - 40px);
-				min-width: min(320px, 100%);
+				min-height: 120px;
+				width: calc(50% - 40px);
+				min-width: min(300px, 100%);
+				margin-inline: auto;
 				border-radius: 12px;
-				&-name{
-					hyphens: auto;
+				cursor: pointer;
+				@media screen and (max-width: 1024px){
+					width: 100%;
 				}
 				&-edit{
+					width: fit-content;
+					margin-inline-start: auto;
 					display: flex;
-					gap: 12px;
+					flex-direction: row;
+					justify-content: flex-end;
 				}
 				.ui-icon {
+					color: $color-active!important;
 					font-size: 28px!important;
-					cursor: pointer;
-					&:hover{
-						color: $color-active !important;
-					}
 				}
 			}
 		}

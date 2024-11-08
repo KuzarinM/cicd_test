@@ -8,13 +8,12 @@ import type { IAsideCategory } from "~/components/Aside/AsideCategory.vue"
 export const useCategoriesStore = defineStore('categories', {
   state: () => ({
     categories: [] as IGetAllResponseItem[],
-    currentCategory: null as null | IGetAllResponseItem,
     devicesInCategory: {} as IDevicesInCategory,
   }),
   getters: {
     allCategories: state => (array = state.categories) => {
       return array.reduce((
-        acc: IAsideCategory['categoryItems'],
+        acc:IAsideCategory['categoryItems'],
         curr) => {
         acc.push(
           {
@@ -27,26 +26,19 @@ export const useCategoriesStore = defineStore('categories', {
       }, [])
     },
     devices: state => state.devicesInCategory,
-    categoryById: state => (id: string | number) => state.categories.find(e => String(e.id) === String(id)),
+    categoryById: state => (id:string|number) => state.categories.find(e => String(e.id) === String(id)),
   },
   actions: {
-    async getAll() {
+    async getAll () {
       const data = await apiCategoryGetAll()
       if (data?.length) {
         this.categories = data
       }
     },
-    async getDevicesByCategoryId (id: number, homeId: string) {
-      const data = await apiCategoryGetDevicesById(id, homeId)
-      this.devicesInCategory = data
-      this.currentCategory = this.categories.find((element) => element.id === id) ?? null
-
-      return this.devicesInCategory
-    },
-
-    async leaveCategory() {
+    async getDevicesByCategoryId (id:number, homeId:string) {
       this.devicesInCategory = {}
-      this.currentCategory = null
+      this.devicesInCategory = await apiCategoryGetDevicesById(id, homeId)
+      return this.devicesInCategory
     },
   },
 })

@@ -1,5 +1,5 @@
 .automation-add-condition{
-	background: none;
+	background: $bg-primary;
 	border-radius: 26px;
 	width: 100%;
 	margin-inline: auto;
@@ -32,38 +32,32 @@
 	}
 	&__conditions{
 		margin-top: 28px;
-		display: grid;
-		grid-template-rows: 1fr;
-		gap:12px;
+		display: flex;
+		gap:52px;
+		flex-wrap: wrap;
+		text-align: center;
+		justify-content: center;
 		@media screen and (max-width: 560px) {
 			gap:16px;
 			margin-top: 16px;
 		}
 	}
 	&__condition{
+		display: inline-block;
+		width: min(184px,95%);
+		aspect-ratio: 1 / 1;
+		background: $settings-color;
+		border-radius: 16px;
 		position: relative;
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		width: 100%;
-		background: $bg-service-primary;
-		border-radius: 12px;
 		padding: 20px;
+		padding-bottom: 12px;
 		border: 1px solid transparent;
-		
-		font-weight: 500;
-		p{
-			font-size: 16px;
-		}
-		&-name{
-			font-size: 24px;
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			font-weight: 700;
-		}
+		font-size: 20px;
+		font-weight: 400;
 		&.--active{
-			background-color: $bg-service-primary-active;
+			border: 1px solid $color-active;
+			box-shadow: 0px 0px 16px 0px $color-active;
+			-webkit-box-shadow: 0px 0px 16px 0px $color-active;
 		}
 		input[type="radio"]{
 			cursor: pointer;
@@ -73,25 +67,15 @@
 		}
 		.ui-icon{
 			display: flex;
-			color: #fff;
-		}
-
-		@media screen and (max-width: 560px) {
-			p{
-				font-size: 16px;
-				font-weight: 500;
-			}
-			&-name{
-				font-size: 18px;
-				font-weight: 700;
-			}
+			justify-content: center;
+			font-size: 128px!important;
+			color: $color-active!important;
 		}
 	}
 	&__submit{
-		position: absolute;
-		right: 20px;
-		top: 50%;
-		transform: translateY(-50%) rotate(-90deg);
-		background: none !important;
+		margin-top: 44px;
+		@media screen and (max-width: 560px) {
+			margin-top: 20px;
+		}
 	}
 }

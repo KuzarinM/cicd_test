@@ -3,85 +3,41 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 32px;
-  margin-top: 40px;
-  background-color: $bg-service-primary;
-  width: 440px;
-  padding: 20px;
+  width: 100%;
   @media screen and (max-height: 572px) {
     margin-top: calc(80px + 40px + 10px);
   }
-  @media screen and (max-width:440px) {
-    width: 320px;
-  }
   &__header{
-    color: $color-primary;
-    font-size: 30px;
-    font-weight: 700;
-    @media screen and (max-width:360px) {
-      font-size: 24px;
-    }
+    color: $color-active;
+    @include section-header
   }
   &__form{
     width: 100%;
-    margin-top: 24px;
+    margin-top: 28px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 28px;
     justify-content: center;
-
+    align-items: center;
     .auth__form-submit{
-      width: 100%;
+      width: min(244px, 95%);
       border-radius: 74px;
-      background: rgba(255,255,255,0.2);
-      color: $color-primary;
-      font-size: 16px;
-      border-radius: 12px;
+      background: $color-active;
+      color: $color-accent;
+      font-size: 20px;
       font-weight: 300;
-      line-height: 46px;
+      padding: 12px;
       cursor: pointer;
       border: 0;
       outline: 0;
       text-align: center;
-      transition: .3s;
       @media screen and (max-width:768px) {
         font-size: 16px;
       }
-      &:hover{
-        background-color: $color-active;
-      }
-    }
-    .auth__form-checkbox{
-      display: flex;
-      gap: 8px;
-      justify-content: flex-start;
-      .custom-checkbox{
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        opacity: 0;
-      &+label{
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        user-select: none;
-      }
-        &+label:before{
-          content: '';
-          display: inline-block;
-          width: 20px;
-          height: 20px;
-          flex-shrink: 0;
-          flex-grow: 0;
-          border: 1px solid #7C7C7D;
-          background-repeat: no-repeat;
-          background-position: center center;
-        }
-        &:checked+label::before{
-          border-color: $color-active;
-          background-color: $color-active;
-          background-image: url('../../icons/check.svg');
-        }
+      &.--outline{
+        background: transparent;
+        border: 2px solid $color-active;
+        color: $color-active;
       }
     }
   }

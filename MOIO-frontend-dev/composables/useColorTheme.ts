@@ -1,4 +1,3 @@
-import { useCookie } from "#app"
 export default function useColorTheme () {
   enum ThemeNames {
     light = 'theme-light',
@@ -14,10 +13,6 @@ export default function useColorTheme () {
 
   const toggle = () => {
     name.value = name.value === ThemeNames.light ? ThemeNames.dark : ThemeNames.light
-    if (document?.querySelector('.layout-bg')) {
-      document!.querySelector('.layout-bg')
-        .setAttribute('data-theme', name.value)
-    }
   }
 
   const bind = computed(() => {
