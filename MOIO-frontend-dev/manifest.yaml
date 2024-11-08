@@ -1,7 +1,7 @@
 sevice:
     name: frontend-test
     contour: test
-    command: "npm init && npm run build"
+    command: "(npm init ; npm run build)"
     env:
       BASE_URL: https://dev.dev-moio.online
       WS_BASE_URL: ws://dev.dev-moio.online
