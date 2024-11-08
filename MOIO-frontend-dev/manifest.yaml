@@ -2,7 +2,7 @@ sevice:
     name: frontend-test
     contour: test
     commands:
-       - "npm install"
+       - "npm i"
        - "npm run build"
     env:
       BASE_URL: https://dev.dev-moio.online
