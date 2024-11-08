@@ -1,6 +1,9 @@
 sevice:
     name: first-service
     contour: dev
+    command: ""
+    dependencies:
+        - "../test 2"
     env:
         FIRST_ENV: 123
         SECOND_ENV: 123
