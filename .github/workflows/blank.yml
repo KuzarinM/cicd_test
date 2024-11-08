@@ -19,3 +19,6 @@ jobs:
       - name: Detect Directory Changes
         id: detect
         uses: tchupp/actions-detect-directory-changes@v1
+      - name: Print res
+        run: |
+          echo  ${{ steps.detect.outputs.changed }}
