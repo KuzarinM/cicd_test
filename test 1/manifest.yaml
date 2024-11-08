@@ -1,0 +1,7 @@
+sevice:
+    name: first-service
+    contour: dev
+    env:
+        FIRST_ENV: 123
+        SECOND_ENV: 123
+    
