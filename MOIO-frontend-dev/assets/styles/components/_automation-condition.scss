@@ -1,0 +1,116 @@
+.automation-condition {
+	&__header{
+		font-size: 24px;
+		font-weight: 600;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		color: $color-primary;
+	}
+	&__body{
+		margin-bottom: 20px;
+	}
+	&__next{
+		background: none !important;
+		color: $color-active !important;
+	}
+	&__description{
+		margin-top: 12px;
+		color: $color-primary;
+		@media screen and (max-width:600px) {
+			margin-top: 20px;
+		}
+	}
+	&__time{
+		margin-top: 20px;
+		&-value{
+			display: flex;
+			align-items: center;
+			gap:12px;
+			margin-top: 12px;
+			.time,
+			input[type="time"]{
+				background: $color-active;
+				border-radius: 16px;
+				padding: 10px 8px;
+				color: $color-accent;
+				border: 0;
+			}
+		}
+	}
+	&__sensors{
+		margin-bottom: 20px;
+		margin-top: 20px;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(153px, calc(50% - 12px)), 1fr));
+		gap: 12px;
+		width: 100%;
+	}
+	&__sensor{
+		background: $bg-service-primary;
+		border-radius: 12px;
+		width: 100%;
+		height: 120px;
+		padding: 12px;
+		display: flex;
+		position: relative;
+		border: 1px solid $color-border;
+		&.--editable {
+			cursor: pointer;
+		}
+		&.--active{
+			cursor: default;
+			border: 1px solid $color-active;
+			background-color: rgba(0,104,164,0.32);
+			.automation-condition__sensor-info{
+				color: #fff;
+				&__check{
+					color: #fff;
+				}
+			}
+		}
+		&-info{
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			font-size: 20px;
+			width: 100%;
+			&__check{
+				display: flex;
+				justify-content: space-between;	
+			}
+		}
+		&-condition{
+			position: absolute;
+			right: -8px;
+			bottom: -5px;
+			padding: 8px;
+			border-radius: 8px;
+			border: 1px solid $color-active;
+			box-shadow: 0 0 4px $color-active;
+			background: $settings-color;
+			color: $color-active;
+			font-size: 40px;
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		&-value{
+		
+		}
+		.mask {
+			position: absolute;
+			inset: 0;
+			border-radius: 12px;
+			border: 1px solid transparent;
+			z-index: 0;
+
+		}
+		.mdi {
+			margin: auto 0;
+			font-size: 36px;
+		}
+	}
+}

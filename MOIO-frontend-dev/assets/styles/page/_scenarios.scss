@@ -1,0 +1,66 @@
+.scenarios {
+	@media screen and (max-width:1200px) {
+		padding-bottom: 80px;
+	}
+	&__header{
+		@include section-header;
+		width: 70%;
+		color: #fff;
+	}
+	&__save{
+		display: flex;
+		gap: 8px;
+		margin-top: 60px;
+		&-btn{
+			width: 224px;
+			color: #fff !important;
+			background-color: rgba(255,255,255,0.2) !important;
+			&:hover{
+				background-color: $color-active !important;
+			}
+		}
+	}
+	.scenarios-available{
+		&__header {
+			font-size: 20px;
+			font-weight: 600;
+			margin-top: 32px;
+			text-align: center;
+		}
+		&__list{
+			margin-top: 60px;
+			display: flex;
+			flex-wrap: wrap;
+			gap:12px;
+			&-item{
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				justify-content: space-between;
+				background: $bg-primary;
+				padding: 20px;
+				position: relative;
+				font-size: 20px;
+				font-weight: 600;
+				min-height: 73px;
+				width: calc(36% - 40px);
+				min-width: min(320px, 100%);
+				border-radius: 12px;
+				&-name{
+					hyphens: auto;
+				}
+				&-edit{
+					display: flex;
+					gap: 12px;
+				}
+				.ui-icon {
+					font-size: 28px!important;
+					cursor: pointer;
+					&:hover{
+						color: $color-active !important;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,137 @@
+.add-roommate-modal{
+  display: flex;
+  flex-direction: column;
+  background: $bg-primary;
+  color: $color-primary;
+  width: 100%;
+  max-height: 85dvh;
+  overflow-y: auto;
+  padding-inline: 16px;
+  @media screen and (max-width:768px) {
+    padding-inline: 20px;
+    border-radius: 20px;
+  }
+
+  &__header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    &-text{
+      width: 100%;
+      @include capabilities-modal-header
+    }
+    
+    .ui-button.--blank {
+      cursor: pointer;
+      font-size: 20px;
+      color: $color-primary;
+      position: absolute;
+      right: -16px;
+      display: flex;
+      @media screen and (max-width:768px) {
+        font-size: 16px;
+      }
+
+    }
+  }
+  &__form{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 36px;
+  }
+  &__groups{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    &-item {
+      @include action-item;
+      padding: 8px 22px ;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: $settings-color;
+      border-radius: 12px;
+    }
+    &-select-all{
+      display: flex;
+      align-items: center;
+      gap:16px;
+    }
+  }
+  &__input-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+  }
+  &__input-group-label{
+    font-size: 16px;
+    font-weight: 400;
+    width: 100%;
+    text-align: start;
+    @media screen and (max-width:768px) {
+      font-size: 14px;
+    }
+
+  }
+  &__input-group-input{
+    width: 100%;
+    background: $color-bg-hover;
+    outline: none;
+    padding: 20px;
+    border-radius: 12px;
+    border-color: transparent;
+    font-size: 16px;
+    @media screen and (max-width:768px) {
+      font-size: 14px;
+    }
+  }
+
+  &__users{
+    background: $color-bg-hover;
+    padding: 12px 8px;
+    border-radius: 12px;
+    height: 168px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap:12px;
+    &::-webkit-scrollbar {
+      border-radius: 2px;
+      width: 8px;
+      margin-inline-start: 10px;
+      left: 10px;
+      position: absolute;
+    }
+    &::-webkit-scrollbar-track {
+      background: $settings-color;
+      width: 4px;
+      border-radius: 2px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $color-active;
+      width: 8px;
+      height: 32px;
+      border-radius: 12px;
+    }
+  }
+  &__users-user{
+    
+    padding: 8px 20px;
+    border-radius: 12px;
+    background: $bg-primary;
+   
+    &.--placeholder{
+      background: transparent;
+      padding: 0;
+      text-align: center;
+    }
+  }
+}

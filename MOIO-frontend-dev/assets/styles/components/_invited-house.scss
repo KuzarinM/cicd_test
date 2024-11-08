@@ -1,0 +1,35 @@
+.invited-house{
+	display: flex;
+	justify-content: flex-start;
+	flex-direction: column;
+	border-radius: 12px;
+	background: $bg-primary;
+	@media screen and (max-width: 560px) {
+		gap: 12px;
+	}
+	&__info{
+		display: flex;
+		flex-direction: column;
+		gap:8px;
+		padding-bottom: 20px;
+		&-house-name{
+			@include action-item;
+		}
+		&-owner-name{
+			@include carousel-category-item;
+		}
+	}
+	&__actions{
+		display: flex;
+		gap: 16px;
+		&-action{
+			width: 410px;
+		}
+		@media screen and (max-width: 768px) {
+			flex-wrap: wrap;
+		}
+		&-action {
+			margin: 0;
+		}
+	}
+}

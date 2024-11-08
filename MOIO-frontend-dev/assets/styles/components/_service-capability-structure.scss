@@ -1,0 +1,10 @@
+.service-capability-structure {
+  &__flex {
+    // Для расположения capabilities в виде row, а не column
+    display: flex;
+    flex-direction: row;
+
+    // Расстояния между capabilities
+    gap: 5px;
+  }
+}

@@ -1,0 +1,80 @@
+.roommates-card{
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: $bg-service-primary;
+  border-radius: 12px;
+  padding: 20px;
+  &__avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    display: block;
+    @media screen and (max-width: 768px){
+      margin-inline: auto;
+    }
+    &.--blank{
+      background: $color-active;
+    }
+  }
+  &__chevron{
+    margin-left: auto;
+    font-size: 36px;
+    @media screen and (max-width:768px) {
+      font-size: 32px;
+    }
+  }
+  .roommates-card-info{
+    margin-left: 12px;
+    width: 50%;
+    margin-inline-end: auto;
+    white-space: nowrap;
+    font-weight: 700;
+    @media screen and (max-width: 768px){
+      width: 100%;
+    }
+    &__is-pending{
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 22px;
+      color: $color-profile-mail;
+    }
+    
+    &__name{
+      @include action-item;
+      font-weight: 500;
+      font-size: 12px;
+      font-style: normal;
+      line-height: 16px;
+      color: $color-profile-name;
+    }
+    &__delete{
+      margin-left: 10px;
+      z-index: 100;
+    }
+    &__role {
+      
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+      span {
+      display: none;
+      font-size: 10px;
+      font-weight: 400;
+        &::after {
+          content: attr(data-end);
+        }
+        &:last-child {
+          &::after {
+            content: "";
+          }
+        }
+      }
+    }
+  }
+  .ui-button{
+    @include carousel-category-item;
+  }
+}

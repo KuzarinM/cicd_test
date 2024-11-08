@@ -1,0 +1,97 @@
+.automation-add-condition{
+	background: none;
+	border-radius: 26px;
+	width: 100%;
+	margin-inline: auto;
+	padding-bottom: 40px;
+	max-height: 85dvh;
+	overflow-y: auto;
+	&__form{
+		display: flex;
+		flex-direction: column;
+	}
+	&__header{
+		font-size: 24px;
+		font-weight: 600;
+		color: $color-active;
+		width: 100%;
+		text-align: center;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		&-text{
+			width: 100%;
+			text-align: center;
+		}
+		.ui-button.--blank{
+			position: absolute;
+			right: 2px;
+			cursor: pointer;
+		}
+	}
+	&__conditions{
+		margin-top: 28px;
+		display: grid;
+		grid-template-rows: 1fr;
+		gap:12px;
+		@media screen and (max-width: 560px) {
+			gap:16px;
+			margin-top: 16px;
+		}
+	}
+	&__condition{
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		width: 100%;
+		background: $bg-service-primary;
+		border-radius: 12px;
+		padding: 20px;
+		border: 1px solid transparent;
+		
+		font-weight: 500;
+		p{
+			font-size: 16px;
+		}
+		&-name{
+			font-size: 24px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-weight: 700;
+		}
+		&.--active{
+			background-color: $bg-service-primary-active;
+		}
+		input[type="radio"]{
+			cursor: pointer;
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+		}
+		.ui-icon{
+			display: flex;
+			color: #fff;
+		}
+
+		@media screen and (max-width: 560px) {
+			p{
+				font-size: 16px;
+				font-weight: 500;
+			}
+			&-name{
+				font-size: 18px;
+				font-weight: 700;
+			}
+		}
+	}
+	&__submit{
+		position: absolute;
+		right: 20px;
+		top: 50%;
+		transform: translateY(-50%) rotate(-90deg);
+		background: none !important;
+	}
+}

@@ -1,0 +1,148 @@
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  &__head{
+    @include capabilities-modal-header;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+  &__avatar{
+    display: flex;
+    gap: 20px;
+    &.--blank{
+      display: block;
+      width: 112px;
+      height: 112px;
+      border-radius: 100%;
+      background: $color-active;
+    }
+  }
+  .profile-card-info{
+    width: 100%;
+    padding-bottom: 40px;
+    border-bottom: 1px solid $color-border;
+    &__role{
+      @include aside-header;
+      font-weight: 300;
+    }
+    &__name{
+      p{
+        font-size: 16px;
+      }
+      font-size: 24px;
+      font-weight: 600;
+      display: flex;
+      gap: 8px;
+      flex-direction: column;
+      justify-content: center;
+      
+      @media screen and (max-width:768px) {
+        font-size: 20px;
+      }
+      .name {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+    &__change-data{
+      display: flex;
+      align-items: center;
+      &-input{
+        font-size: 24px;
+        background: none;
+        border: 0;
+        border-bottom: 1px solid $color-primary;
+        &:focus{
+          outline: none;
+        }
+        @media screen and (max-width:768px) {
+          font-size: 20px;
+        }
+      }
+      button.blank{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
+        background: $color-active;
+        color: $settings-color;
+        width: 32px;
+        aspect-ratio: 1;
+        padding: 4px;
+        outline: none;
+        cursor: pointer;
+      }
+    }
+    &__data{
+      margin-top: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid $color-border;
+      gap:40px;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-items: flex-start;
+ 
+      &-group{
+        margin: 0;
+        width: min(400px, 95%);
+        &.ui-button {
+          width: 400px;
+        }
+        &.--password{
+          a{
+            line-height: 46px;
+          }
+        }
+        &-label{
+          text-align: start;
+          @include  carousel-category-item;
+        }
+        &-data {
+          position: relative;
+          display: flex;
+          margin-top: 10px;
+          background: none;
+          font-size: 24px;
+          span{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          &-input{
+            background: transparent;
+            width: calc(100% - 20px);
+            border: 0;
+            font-size: 24px;
+            &:focus,&:focus-within,&:focus-visible{
+              outline: 0;
+            }
+          }
+          a{
+            color: $color-active;
+          }
+        }
+      }
+    }
+  }
+    button.--blank{
+    color: $color-active;
+      &.--submit{
+        top: calc(50% - 16px);
+        position: absolute;
+        right: calc(-30px - 12px);
+        width: 30px;
+        background: $color-active;
+        color: $settings-color;
+        border-radius: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+  }
+  
+}

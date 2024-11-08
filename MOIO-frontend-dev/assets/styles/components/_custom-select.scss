@@ -1,0 +1,73 @@
+#custom-select.custom-select {
+	display: block;
+}
+
+.custom-select {
+	position: relative;
+	cursor: pointer;
+	width: 100%;
+
+	&__current-value {
+		width: 100%;
+		text-align: center;
+		padding: 20px;
+		position: relative;
+		@include action-item;
+		font-weight: 400;
+		border-radius: 12px;
+		background-color: $bg-primary;
+	}
+
+	&__options {
+		background-color: $bg-primary;
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		transform: translateY(calc(100% + 8px));
+		z-index: 5;
+		max-height: min(200px, 80dvh);
+		padding: 24px;
+		border-radius: 12px;
+		&-container{
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		& .scrollable-content--with-padding {
+			&::-webkit-scrollbar{
+				width: 16px;
+			}
+
+			&::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track {
+				border-width: 12px;
+			}
+		}
+	}
+
+	&__option {
+		text-align: center;
+		padding: 20px;
+		position: relative;
+		border-radius: 8px;
+
+		&.--active {
+			background-color: $color-active;
+		}
+
+		&:hover {
+			background-color: $color-bg-hover;
+		}
+	}
+
+	&__option-value {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		cursor: pointer;
+	}
+
+}

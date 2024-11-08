@@ -1,0 +1,236 @@
+.add-group{
+  height: 100%;
+  @media screen and (max-width: 1200px) {
+    padding-bottom: 100px;
+  }
+  &__header{
+    @include section-header;
+    color: #fff;
+    width: 70%;
+  }
+  &__delete{
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 16;
+    &:hover{
+      color: #ca1e1e;
+    }
+  }
+  &__form{
+    margin-top:40px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  &__input-group{
+    width: min(100%, 387px);
+    margin-bottom: 40px;
+    &-flexrow{
+      display: flex;
+      gap: 8px;
+    }
+    &-flex{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    span{
+      color: #fff;
+      margin-top: 20px;
+      padding-right: 10px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+  &__label{
+    @include tool-item;
+    color: #fff;
+    margin-bottom: 8px;
+    width: 100%;
+  }
+  &__input{
+    width: 70%;
+    margin-top: 12px;
+    &[type="text"]{
+      color: #fff;
+      font-size: 24px;
+      font-weight: 600;
+      border: none;
+      outline: none;
+      background: none;
+      padding: 8px 0 8px 0;
+      border-bottom: 1px solid $color-border;
+      &::-webkit-input-placeholder {
+        color:    rgba(255,255,255,0.6);
+      }
+    }
+    &-wrapper{
+      position: relative;
+      background-color: $settings-color;
+      border-radius: 15px;
+      display: flex;
+      .floor-label{
+        padding: 8px 16px;
+        font-size: 24px;
+        font-weight: 400;
+        position: relative;
+        border-radius: 15px;
+        box-shadow: 0px 0px 6px 0px $color-active;
+        -webkit-box-shadow: 0px 0px 6px 0px $color-active;
+        background-color: $settings-color;
+        inset: 0;
+        cursor: pointer;
+        &.--active{
+          background: $color-active;
+        }
+        @media screen and (max-width:768px) {
+          font-size: 20px;
+        }
+      }
+    }
+
+  }
+  &__select{
+    background: $settings-color;
+    color: $color-primary;
+    padding: 12px;
+    border-radius: 12px;
+    width: 100%;
+  }
+  
+	&__buttons {
+    margin-top: 40px;
+		display: flex;
+		gap: 12px;
+
+		@media screen and (max-width:1200px) {
+			padding-bottom: 60px;
+		}
+
+		@media screen and (max-width:500px) {
+			flex-direction: column;
+		}
+	}
+	
+	&__button {
+		width: 300px;
+		
+		@media screen and (max-width:768px) {
+			flex: 1;
+			width: 100%;
+		}
+
+		@media screen and (max-width:425px) {
+			flex-direction: column;
+		}
+
+    &--long {
+      margin-top: 40px;
+      width: min(100%, 387px);
+    }
+	}
+
+  .add-group-available-devices{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    &__add{
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      top: 20px;
+      width: calc(100% - 357px);
+      border-radius: 32px 0 0 32px;
+      flex-wrap: wrap;
+      background-color: $bg-primary;
+      z-index: 10;
+      padding: 20px;
+      overflow-y: auto;
+      @media screen and (max-width: 1200px) {
+				width: 100%;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				border-radius: 0;
+			}
+      &-header{
+        margin-top: 20px;
+        font-weight: 600;
+        font-size: 40px;
+      }
+      &-close{
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+      &-flex{
+        margin-top: 40px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding-bottom: 20px;
+      }
+      &-rooms{
+        margin-top: 40px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+    }
+    &-now{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    &__header{
+      color: #fff;
+      @include aside-header;
+      margin-top: 20px;
+    }
+    &__list{
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      width: 38%;
+      gap: 12px;
+    }
+  }
+  .add-group__preview-wrapper{
+    width: 100%;
+  }
+  &__preview{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 30px;
+    .add-group__preview-section{
+      width: 100%;
+    }
+    .add-group__preview-section-title{
+      @include aside-header;
+      color: #fff;
+      margin-top: 20px
+    }
+    .add-group__preview-section-value{
+      @include tool-item;
+      text-align: center;
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+  }
+}

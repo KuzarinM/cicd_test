@@ -1,0 +1,106 @@
+.header-content{
+  position: absolute;
+  z-index: 10;
+  right: 40px;
+  top: 40px;
+  @media screen and (max-width: 1200px){
+    right: 20px;
+    top: 20px;
+  }
+  &__flex{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  &__menu-container{
+    position: relative;
+  }
+  .header-button{
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background: transparent;
+    outline: none;
+    border: none;
+  }
+}
+.header-menu{
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background: $bg-primary;
+  min-width: 300px;
+  max-width: calc(((100vw - 357px) / 5) * 2);
+  width: fit-content;
+  max-height: 40vh;
+  right: 0;
+  padding: 20px;
+  border-radius: 24px;
+  box-shadow: 0px 0px 10px 0px $service-shadow-color;
+  -webkit-box-shadow: 0px 0px 10px 0px $service-shadow-color;
+  &__item-list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  @media screen and (max-width: 1200px){
+    max-width: calc(50vw - 20px);
+  }
+  @media screen and (max-width: 425px){
+    padding: 12px;
+  }
+  @media screen and (max-width: 375px){
+    min-width: 0;
+    width: calc(100vw - 40px);
+    max-width: calc(100vw - 40px);
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  &__item,
+  &__item-btn{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-radius: 12px;
+    padding: 12px;
+    gap: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+    @media screen and (max-width: 425px){
+      padding: 8px;
+    }
+    &:hover{
+      background-color: $color-bg-hover;
+    }
+  }
+  &__item{
+    &.--active,
+    &-btn{
+      font-size: 16px;
+      font-weight: 600;
+    }
+    &-edit{
+      &[aria-current="page"]{
+        color: $color-active;
+      }
+    }
+    &-title{
+      @include header-submenu-item;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+    &-icon{
+      @media screen and (max-width: 425px) {
+        display: none !important;
+      }
+    }
+  }
+}

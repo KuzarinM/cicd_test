@@ -1,0 +1,71 @@
+.thermostat-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &__range {
+    width: 265px;
+    height: fit-content;
+    overflow: visible;
+    position: absolute;
+    #thumb{
+      filter: drop-shadow(0px 0px 7px rgba(0, 196, 241, 0.5)) ;
+      fill: #fff;
+    }
+  }
+  &__drag-area {
+    height: 60%; 
+    width:100%; 
+    position: absolute; 
+    top: 0; 
+    z-index: 5;
+  }
+  &__progress{
+    stroke: $color-active;
+  }
+  &__controls{
+    display: flex;
+    justify-content: space-between;
+    width: 74%;
+    fill: $color-bg-hover;
+    padding-left: 10px;
+    top: calc((230px / 2) + 52px);
+    flex-direction: row-reverse;
+    &-action{
+      font-size: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    &-text{
+      right: 35px;
+      font-size: 20px;
+      font-weight: 700;
+      color: $color-primary;
+    }
+  }
+  &__output {
+    width: 160px;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+    line-height: 1.5;
+  }
+  &__value{
+    font-size: 30px;
+    font-weight: 700;
+    color: $color-primary;
+  }
+  &__text {
+    font-size: 12px;
+    opacity: 0.6;
+    left: 50%;
+    width: 100px;
+  }
+}

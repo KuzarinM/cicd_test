@@ -1,0 +1,136 @@
+.service{
+  width: 100%;
+  height: 120px;
+  border: 1px solid $color-service-border;
+  display: block;
+  border-radius: 12px;
+  background: $bg-service-primary;
+  position: relative;
+  &.--active {
+    border-color: rgba(0, 196, 241, 1) !important;
+    background: $bg-service-active;
+    .service-name{
+      span{
+        color: #fff;
+      }
+    } 
+    .service-info__state{
+        color: #fff;
+    }
+    .service-ico-wrapper {
+      transition: color .1s;
+      position: relative;
+      &__color{
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        border: 1px solid;
+        position: absolute;
+        left: 27px;
+        transition: 0s;
+      }
+      .ui-icon{
+        transition: color .1s;
+        color: #fff !important;
+      }
+    }
+  }
+  .service-stuff {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-weight: 500;
+  }
+  &.--click-able{
+    cursor: pointer
+  }
+  &.--pending{
+    cursor: progress;
+    pointer-events: bounding-box;
+    &::before{
+      display: block;
+      content: '';
+      background: rgba(238, 238, 238, 0.74);
+      background: linear-gradient(110deg, rgba(236, 236, 236, 0.8) 20%, rgba(245, 245, 245, 0.8) 18%, rgba(236, 236, 236, 0.8) 33%);
+      background-size: 200% 100%;
+      animation: service-skeleton 1s infinite linear;
+      position: absolute;
+      border-radius: 12px;
+      opacity: .95;
+      z-index: 5;
+      height: 102%;
+      top: -1%;
+      right: -1%;
+      width: 102%;
+    }
+  }
+  &.--pending.--dead{
+    cursor: pointer;
+    &::before{
+      background: rgba(238, 238, 238, 0.4);
+      text-align: center;
+      content: "Устройство не отвечает";
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: none;
+      backdrop-filter: blur(24px);
+    }
+  }
+ 
+
+  .service-ico-wrapper{
+    width: 100%;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &.--active{
+        transition: color .1s;
+      .ui-icon{
+        transition: color .1s;
+      }
+    }
+  }
+  .service-info{
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+    @media screen and (max-width: 768px) {
+      padding: 12px;
+    }
+    @media screen and (max-width: 560px) {
+      padding: 8px;
+    }
+    .service-name {
+      @include tool-item;
+      text-align: start;
+      margin-top: 9px;
+      span {
+        display: -webkit-box;
+        -webkit-line-clamp:2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
+        font-weight: 700;
+      }
+    }
+  }
+  .service-capabilities-list-wrapper{
+    cursor: auto;
+    display: block;
+    position: absolute;
+    background: transparent;
+    inset: 25px;
+  }
+}
+
+.service-capabilities-list-wrapper{
+  position: absolute;
+}

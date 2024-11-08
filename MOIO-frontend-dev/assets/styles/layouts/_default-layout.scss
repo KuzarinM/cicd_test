@@ -1,0 +1,122 @@
+* {
+	@-moz-document url-prefix() {
+		scrollbar-width: thin;
+		scrollbar-color: $color-active $settings-color;
+
+		&:hover {
+			scrollbar-color: $color-active $settings-color;
+		}
+	}
+}
+
+.layout-bg {
+	width: 100vw;
+	height: 100vh;
+	background-color: $color-bg;
+
+	.layout.--default {
+
+		header,
+		aside {
+			position: relative;
+		}
+
+		main {
+			position: absolute;
+			overflow-y: hidden;
+			overflow-x: hidden;
+			width: calc(100% - 357px);
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: cover;
+			right: 20px;
+			bottom: 20px;
+			top: 20px;
+			border-radius: 32px;
+
+			@media screen and (max-width: 1200px) {
+				overflow-y: auto;
+				width: 100%;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				border-radius: 0;
+			}
+		}
+
+		.dark-opacity {
+			width: 100%;
+			height: 100%;
+			background-color: $opacity;
+			padding: 20px;
+			overflow-y: hidden;
+
+			@media (max-width: 1200px) {
+				padding-right: 0;
+			}
+		}
+
+	}
+}
+
+.scrollable-content {
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-right: 12px;
+
+	&::-webkit-scrollbar-button:start:increment,
+	&::-webkit-scrollbar-button:end:decrement {
+		height: 50px;
+	}
+
+	&::-webkit-scrollbar-button:end:decrement {
+		height: 16px;
+	}
+
+	@media (max-width: 1200px) {
+		padding-right: 20px;
+
+		&::-webkit-scrollbar {
+			width: 4px;
+		}
+
+		&::-webkit-scrollbar-button:end:decrement {
+			height: 60px;
+		}
+	}
+
+	&--with-padding {
+		padding: 0;
+
+		&::-webkit-scrollbar-button:start:increment,
+		&::-webkit-scrollbar-button:end:decrement {
+			height: 0;
+		}
+
+		&::-webkit-scrollbar {
+			width: 20px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			border-left: 12px solid transparent;
+			background-clip: padding-box;
+		}
+
+		&::-webkit-scrollbar-track {
+			border-left: 12px solid transparent;
+			background-clip: padding-box;
+		}
+
+		@media (max-width: 1200px) {
+			&::-webkit-scrollbar {
+				width: 24px;
+			}
+
+			&::-webkit-scrollbar-thumb,
+			&::-webkit-scrollbar-track {
+				border-width: 20px;
+			}
+		}
+	}
+}

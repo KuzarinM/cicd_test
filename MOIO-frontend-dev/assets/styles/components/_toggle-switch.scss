@@ -1,0 +1,119 @@
+
+.toggle-switch-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  &:not(.--vertical-large){
+    .toggle-switch {
+      &__button {
+        &-icon {
+          top: 4px;
+          left: 5px;
+        }
+      }
+    }
+  }
+}
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 36px;
+  overflow: hidden;
+  border-radius: 50px;
+ 
+  &.--vertical-large {
+    width: 52px;
+    height: 31px;
+    border-radius: 50px;
+    z-index: 1;
+    .toggle-switch__layer{
+      border-radius: 50px;
+      background-color: $color-bg-switch;
+    }
+    .toggle-switch__button{
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      &-icon{
+        width: 27px;
+        height: 27px;
+        padding: 0;
+        border-radius: 100%;
+        font-size: 40px;
+        transform: translateX(10%) translateY(0);
+      }
+    }
+    
+    .toggle-switch__checkbox {
+      &:checked + .toggle-switch__button>.toggle-switch__button-icon {
+        transform: translateX(85%) translateY(0);
+        content: v-bind(ico);
+        background-color: $color-active;
+        filter: drop-shadow(0px 0px 5px rgba(0, 196, 241, 0.5));
+      }
+      
+      &:checked ~ .toggle-switch__layer {
+        background-color: $color-bg-switch-active !important;
+      }
+    }
+  }
+  &__button {
+    z-index: 2;
+    &-icon {
+      width: 20px;
+      height: 10px;
+      padding: 9px 4px;
+      background-color: #fff;
+      border-radius: 50%;
+      transition: all 0.3s;
+      will-change: background-color, color;
+      font-size: 20px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $thumb-color!important;
+    }
+  }
+  &__layer,
+  &__button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  &__checkbox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 4;
+
+    &:checked + .toggle-switch__button>.toggle-switch__button-icon {
+      transform: translateX(24px);
+      background-color: $thumb-color;
+      color: $color-active!important;
+    }
+
+    &:checked ~ .toggle-switch__layer {
+      background-color: $color-active;
+    }
+  }
+
+  &__layer {
+    border-radius: 100px;
+    width: 100%;
+    background-color: $thumb-color;
+    transition: 0.3s all;
+    z-index: 1;
+    will-change: background-color;
+  }
+
+  
+}

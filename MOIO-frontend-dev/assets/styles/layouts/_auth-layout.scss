@@ -1,0 +1,51 @@
+.layout.--auth{
+	main{
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.logo-1 {
+		position: absolute;
+		top: 5%;
+		transform: translateY(0);
+		z-index: 0;
+		max-width: 95%;
+		transition: all 0.5s ease;
+		width: 285px;
+		height: 95px;
+		@media screen and (max-width:375px) {
+			width: 170px;
+			height: 55px;
+			top: 5%;
+		}
+		@media screen and (max-width:1200px) {
+			top: 5%;
+		}
+		@media screen and (max-height:620px){
+			display: none;
+		}
+	}
+	.logo-2 {
+		position: absolute;
+		top: 20%;
+		transform: translateY(275px);
+		z-index: 0;
+		max-width: 95%;
+		transition: all 0.5s ease;
+		width: 285px;
+		height: 95px;
+		@media screen and (max-width:375px) {
+			width: 170px;
+			height: 55px;
+			top: 10%;
+		}
+		@media screen and (max-width:1200px) {
+			top: 10%;
+		}
+	}
+}

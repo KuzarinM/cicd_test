@@ -1,0 +1,74 @@
+@mixin section-header {
+  font-size: 44px;
+  font-weight: 700;
+  @media screen and (max-width:768px) {
+    font-size: 28px;
+  }
+}
+@mixin aside-header {
+  font-size: 30px;
+  font-weight: 700;
+  @media screen and (max-width:768px) {
+    font-size: 24px;
+  }
+}
+@mixin aside-item {
+  font-size: 16px;
+  font-weight: 500;
+  &::first-letter{
+    text-transform: uppercase;
+  }
+  @media screen and (max-width:768px) {
+    font-size: 16px;
+  }
+}
+@mixin action-item {
+  font-size: 16px;
+  font-weight: 600;
+}
+@mixin tool-item {
+  font-size: 16px;
+  font-weight: 500;
+  @media screen and (max-width:768px) {
+    font-size: 16px;
+  }
+}
+@mixin device-item{
+  font-size: 20px;
+  font-weight: 400;
+  @media screen and (max-width:768px) {
+    font-size: 16px;
+  }
+}
+@mixin button {
+  font-size: 16px;
+  font-weight: 500;
+  @media screen and (max-width:768px) {
+    font-size: 16px;
+  }
+}
+@mixin carousel-category-item {
+  font-size: 16px;
+  font-weight: 500;
+  @media screen and (max-width:768px) {
+    font-size: 14px;
+  }
+}
+@mixin header-submenu-item {
+  font-size: 16px;
+  font-weight: 700;
+}
+@mixin capabilities-modal-header {
+  font-size: 30px;
+  font-weight: 700;
+  @media screen and (max-width:768px) {
+    font-size: 24px;
+  }
+}
+@mixin capabilities-change-modal-header {
+  font-size: 30px;
+  font-weight: 800;
+  @media screen and (max-width:768px) {
+    font-size: 24px;
+  }
+}

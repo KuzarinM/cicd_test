@@ -1,0 +1,74 @@
+.category{
+	@media screen and (max-width: 1200px) {
+		padding-bottom: 80px;
+	}
+	&-flex{
+		display: flex;
+		align-items: center;
+		gap: 20px;		
+		.ui-button{
+			display: none;
+		}
+		@media screen and (max-width:1200px) {
+			.ui-button{
+				display: block;
+			}
+		}
+	}
+	&__header{
+		color: #fff;
+		@include section-header;
+	}
+	&__button-expand {
+		line-height: 1!important;
+		color: #fff!important;
+		height: 20px;
+	}
+	&__group{
+		margin-top: 40px;
+		&-list{
+			&__parent{
+				width: 100%;
+				display: flex;
+				&-row{
+					margin-top: 20px;
+					width: 100%;
+					overflow-y: hidden;
+					overflow-x: auto;
+					white-space: nowrap;
+					&-item{
+					cursor: pointer;
+					font-size: 24px;
+					display: inline-block;
+					line-height: 32px;
+					padding-right: 40px;
+					color: rgba(255,255,255,0.6);
+						&.--active{
+							color: #fff;
+						}
+					}
+				}
+			}
+		}
+	}
+	&__group-service-list{
+		margin-top: 40px;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(153px, calc(50% - 16px)), 1fr));
+		gap: 16px;
+		@media screen and (max-width: 768px){
+			grid-template-columns: repeat(auto-fill, minmax(min(153px, calc(50% - 8px)), 1fr));
+			gap: 8px;
+			padding-inline: 8px;
+		}
+	}
+	&__group-header{
+		@include aside-header;
+		color: #fff;
+	}
+	&-container{
+		position: absolute;
+		left: 320px;
+		top: 70px;
+	}
+}

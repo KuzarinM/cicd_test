@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Hind+Siliguri:wght@300;400;500;600;700&family=Sarala:wght@400;700&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  box-sizing: border-box;
+  &:not(input){
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+}
+svg{
+  transition: unset;
+}
+html {
+  background: $main-bg-gradient-end;
+}
+
+body{
+  height: 100%;
+  overflow: hidden;
+}
+.layout {
+  *{
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
+  color: $color-primary;
+  }
+  input[type="submit"] {
+    cursor: pointer;
+  }
+  &.--default{
+    input:focus::-webkit-input-placeholder { color:transparent; }
+    input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+    input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+    input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+  }
+}
+.Toastify__toast-body>div:last-child {
+  word-break: break-word;
+}
+a,div,h1,h2,h3,span,label,p,i,main,section,header,aside,nav{
+  transition: all .3s;
+  word-break: break-word;
+  -webkit-tap-highlight-color: transparent;
+}
+div{
+  &::-webkit-scrollbar {
+    border-radius: 2px;
+    width: 8px;
+    height: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $settings-color;
+    width: 4px;
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $color-active;
+    width: 8px;
+  }
+  &::-webkit-scrollbar-button:start:increment,
+  &::-webkit-scrollbar-button:end:decrement {
+    height: 0;
+    display: block;
+    background: transparent;
+  }
+}
+button {
+  word-break: normal;
+  word-break: auto-phrase;
+}
+button.blank{
+  border: 0;
+  outline: none;
+  background: transparent;
+  cursor: pointer;
+}
+input {
+  appearance: none;
+  border-radius: 0;
+}

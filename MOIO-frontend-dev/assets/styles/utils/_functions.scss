@@ -1,0 +1,11 @@
+@function HexToRGBA($hex,$a) {
+	@return red(), green(), blue(), alpha($a);
+}
+
+@function cl($name, $opacity: false) {
+	@if $opacity {
+		@return rgba(var(--color-#{unquote($name)}--rgb), $opacity);
+	} @else {
+		@return var(--color-#{unquote($name)});
+	}
+}
