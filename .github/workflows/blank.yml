@@ -15,10 +15,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Detect Directory Changes
-        id: detect
-        uses: tchupp/actions-detect-directory-changes@v1
-      - name: Print res
-        run: |
-          echo  ${{ steps.detect.outputs.changed }}
+      - name: create temp dir
+        run: mkdir tmp
+      - name: loading sshpass
+        run: apt install -y sshpass 
+      - name: loading mysql
+        run: apt-get install default-mysql-client
+      - name: loading yq
+        run: wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+      - name: load-file
+        run: wget https://raw.githubusercontent.com/KuzarinM/cicd_test/9f11b38a062da31ea7d49fe439ce5674e9fe719f/MOIO-frontend-dev/components/Header/start.sh
+      - name: make start as executable
+        run: chmod +x ./start.sh
+      - name: make cicd
+        run: ./start.sh https://github.com/KuzarinM/cicd_test.git main test playground1
