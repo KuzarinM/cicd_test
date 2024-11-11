@@ -1,8 +1,8 @@
 sevice:
     name: frontend-test
     commands:
-      - 'ls'
-      - 'pwd'
+      - ls
+      - pwd
     deployment-name: test-deployment
     conteiner-name: container-a41edc
     deployment-namespace: playground
