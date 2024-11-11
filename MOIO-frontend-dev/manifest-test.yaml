@@ -1,9 +1,7 @@
-sevice:
+service:
     name: frontend-test
-    commands:
-      - 'ls'
     deployment-name: test-deployment
-    conteiner-name: container-a41edc
+    container-name: container-a41edc
     deployment-namespace: playground
     env:
       BASE_URL: https://dev.dev-moio.online
