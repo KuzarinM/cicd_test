@@ -1,12 +1,14 @@
 sevice:
-    name: frontend-test
-    commands:
-      - 'ls'
-    deployment-name: test-deployment
-    conteiner-name: container-a41edc
-    deployment-namespace: playground
-    env:
-      BASE_URL: https://dev.dev-moio.online
+    name: #Строка имени сервиса. По сути, это его логические имя, не влияет ни на что
+    commands: # Опциональный массив комманд, выполняемых до сборки образа и той папки, в которой лежит сей файл
+      - 'ls' # Комманды писать в таком виде
+    deployment-name: test-deployment # Имя объекта Deployment в K8s кластере (существующего)
+    conteiner-name: container-a41edc # Имя контейнера в Deployment в K8s кластере (существующего)
+    deployment-namespace: playground # Имя пространства имён в K8s, в котором Deployment 
+    dependencies: # Опционально. Массив деректорый вне той, в которой фалик, изменения в которых должны привести к перекладыванию сервиса
+     - './../test' # Элемент саммива, тоесть одна папка
+    env: # Опционально, переменные среды, которые хотим поставить. Словарь
+      BASE_URL: https://dev.dev-moio.online # В таком формате переменные делаем
       WS_BASE_URL: ws://dev.dev-moio.online
 
       NUXT_BASE_TITLE: "MOIO"
