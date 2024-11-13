@@ -7,18 +7,13 @@ on:
       - main
 
 jobs:
- detect-directory-changes:
-    name: "Detect Directory Changes"
+ publishing:
     runs-on: ubuntu-latest
-    outputs:
-      changed: ${{ steps.detect.outputs.changed }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Detect Directory Changes
-        id: detect
-        uses: tchupp/actions-detect-directory-changes@v1
-      - name: Print res
-        run: |
-          echo  ${{ steps.detect.outputs.changed }}
+      - name: start starter
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{vars.HOST}}
+          username: ${{vars.USERNAME}}
+          password: ${{vars.PASSWORD}} 
+          script: cd dev && ./start.sh https://github.com/KuzarinM/cicd_test.git main test test
