@@ -1,14 +1,14 @@
 <template>
-  <div class="roommates-card">
+  <div class="roommates-card" @click="isSettingsModalShow = true">
     <div class="roommates-card__avatar">
       <div class="roommates-card__avatar --blank" />
     </div>
     <div class="roommates-card-info">
-      <div class="roommates-card-info__name">
-        {{ name }}
+      <div :class="`roommates-card-info__is-pending`">
+        {{ isPending ? 'Ожидание ответа на приглашение' : name }}
       </div>
-      <div :class="`roommates-card-info__is-pending ${isPending?'--pending':''}`">
-        {{ isPending?'Ожидаение ответа на приглашение':'Приглашение принято' }}
+      <div class="roommates-card-info__name">
+        {{ login }}
       </div>
       <div class="roommates-card-info__role">
         <div v-if="groups.length">
@@ -19,23 +19,7 @@
         </span>
       </div>
     </div>
-    <ui-button
-      padding="20px 6px"
-      rounded="10px"
-      class-name="delete-outline"
-      margin-inline="0"
-      @click="removeUserFromGroup(true)"
-    >
-      {{ isPending?'Отменить':'Удалить' }}
-    </ui-button>
-    <ui-button
-      class-name="blank"
-      padding="0"
-      margin-inline="0"
-      @click="isSettingsModalShow = true"
-    >
-      <ui-icon name="chevron-right" class="roommates-card__chevron" size="36" />
-    </ui-button>
+    <ui-icon v-if="isChange" style="z-index: 5; color: rgb(180, 0, 0); margin-left: 5px;" name="delete" @click="emit('userForRemove')" />
   </div>
   <ui-modal
     ref="settings"
@@ -64,17 +48,21 @@ import RoommateSettings from "~/components/Profile/RoommateSettings.vue"
 import { useGroupsStore } from "~/store/groups"
 
 export type ProfileRoommates = {
+  isEdit?:boolean
   id:number
   name:string
   login:string,
   groups:{id:string, name:string, isPending:boolean}[]
   isPending:boolean
+  isChange?:boolean
 }
 
 const props = defineProps<ProfileRoommates>()
 const emit = defineEmits<{
     removeUser:[void]
+    userForRemove:[void]
 }>()
+
 const groupStore = useGroupsStore()
 const isSettingsModalShow = ref(false)
 async function removeUserFromGroup (isHome?:boolean) {

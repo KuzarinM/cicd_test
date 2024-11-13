@@ -11,13 +11,14 @@ export interface IUnknownProps{
   bgColor?:string
   bRadius?:string
 }
-const props = withDefaults(defineProps<IUnknownProps>(), { padding: '16px 20px', bgColor: 'var(--settings-color)', bRadius: '16px' })
+const props = withDefaults(defineProps<IUnknownProps>(), { padding: '20px 20px', bgColor: 'rgba(255,255,255,0.2)', bRadius: '12px' })
 
 </script>
 
 <style lang="scss">
 .any-list-item{
   @include action-item;
+  color: var(--color-primary);
   width: 100%;
   background: v-bind(bgColor);
   padding: v-bind(padding);

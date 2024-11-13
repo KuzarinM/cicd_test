@@ -1,28 +1,13 @@
 <template>
   <div class="user-edit">
     <loader-screen :is-loading="isLoading" />
-    <h1 class="user-edit__header">
-      Смена {{ type === 'password' ? 'пароля' : "почты" }}
-    </h1>
     <form method="post" class="user-edit__container" @submit.prevent="changeData()">
-      <h2 class="user-edit__subheader">
-        {{ type === 'password' ? 'Введите старый и новый пароль' : "Введите новую почту и пароль" }}
-      </h2>
-      <div v-if="type === 'password'" class="user-edit__input-group">
-        <label for="password" class="user-edit__input-group-label">Введите новый пароль</label>
-        <input
-          id="password"
-          v-model="newPassword"
-          type="text"
-          class="user-edit__input-group-input"
-          required
-        >
-      </div>
       <div v-if="type === 'email'" class="user-edit__input-group">
-        <label for="login" class="user-edit__input-group-label">Введите новую почту</label>
+        <label for="login" class="user-edit__input-group-label">Новая почта</label>
         <input
           id="login"
           v-model="login"
+          placeholder="Введите почту"
           type="email"
           class="user-edit__input-group-input"
           required
@@ -30,22 +15,45 @@
       </div>
       <div class="user-edit__input-group">
         <label for="old-pass" class="user-edit__input-group-label">
-          Введите {{ type === 'password' ? 'старый' : "" }} пароль
+          {{ type === 'password' ? 'Старый пароль' : "Пароль" }}
         </label>
         <input
           id="old-pass"
           v-model="oldPassword"
-          type="text"
+          placeholder="Введите пароль"
+          type="password"
           class="user-edit__input-group-input"
           required
         >
+        <div v-if="type === 'password'" class="user-edit__input-group">
+          <label for="password" class="user-edit__input-group-label">Новый пароль</label>
+          <input
+            id="password"
+            v-model="newPassword"
+            placeholder="Введите новый пароль"
+            type="password"
+            class="user-edit__input-group-input"
+            required
+          >
+        </div>
+        <div v-if="type === 'password'" class="user-edit__input-group">
+          <label for="password" class="user-edit__input-group-label">Подтвердите пароль</label>
+          <input
+            id="password"
+            v-model="newPassword1"
+            type="password"
+            class="user-edit__input-group-input"
+            placeholder="Подтвердите новый пароль"
+            required
+          >
+        </div>
       </div>
       <h2 v-if="step === 2" class="user-edit__subheader">
         Код подтверждения
       </h2>
       <div v-if="step === 2" class="user-edit__input-group">
         <label for="confirmation" class="user-edit__input-group-label">
-          Введите код подтверждения. Вам было отправлено письмо с кодом подтверждения на новую почту
+          Введите код подтверждения. Вам было отправлено письмо с кодом подтверждения на {{ type==='email' ? 'новую' : '' }} почту
         </label>
         <input
           id="confirmation"
@@ -57,12 +65,11 @@
         >
       </div>
       <ui-button
+        variant="secondary"
         type="submit"
-        rounded="16px"
-        padding="4px 12px"
-        margin-inline="0"
+        class="user-edit__button"
       >
-        Сохранить
+        Сохранить изменения
       </ui-button>
     </form>
   </div>
@@ -74,6 +81,11 @@ import LoaderScreen from "~/components/shared/LoaderScreen.vue"
 import apiUserConfirmLogin from "~/api/user/confirmLogin"
 import apiUserConfirmPassword from "~/api/user/confirmPassword"
 
+export type UserEdit = {
+  type: string
+}
+
+const props = defineProps<UserEdit>()
 const userStore = useUserStore()
 const router = useRoute()
 
@@ -107,15 +119,17 @@ const isLoading = computed(() => passwordFetch.pending.value ||
     loginFetch.pending.value ||
     loginConfirmFetch.pending.value)
 
-const type = ref<'password'|'email'>(router.query?.password ? 'password' : 'email')
+const type = props.type === 'password' ? 'password' : 'email'
 const oldPassword = ref('')
 const newPassword = ref('')
+const newPassword1 = ref('')
 const login = ref('')
 const code = ref('')
 const step = ref(1)
 function clearFields () {
   code.value = ''
   newPassword.value = ''
+  newPassword1.value = ''
   code.value = ''
   oldPassword.value = ''
   login.value = ''
@@ -123,28 +137,29 @@ function clearFields () {
 
 async function changeData () {
   if (step.value === 1) {
-    if (type.value === "password") {
-      await passwordFetch.execute()
-      step.value = passwordFetch.data.value ? 2 : 1
-      return
+    if (type === "password") {
+      if (newPassword.value != newPassword1.value) {
+        useNotification('error', 'Пароли не совпадают')
+      } else {
+        await passwordFetch.execute()
+        step.value = passwordFetch.data.value ? 2 : 1
+        return
+      }
     }
-    if (type.value === "email") {
+    if (type === "email") {
       await loginFetch.execute()
       step.value = loginFetch.data.value ? 2 : 1
       return
     }
   }
   if (step.value === 2) {
-    if (type.value === "password") {
+    if (type === "password") {
       await passwordConfirmFetch.execute()
-      console.log(passwordConfirmFetch.data)
       step.value = passwordConfirmFetch.data.value ? 1 : 2
       passwordConfirmFetch.data.value && clearFields()
     }
-    if (type.value === "email") {
+    if (type === "email") {
       await loginConfirmFetch.execute()
-      console.log(loginConfirmFetch.data)
-
       step.value = loginConfirmFetch.data.value ? 1 : 2
       loginConfirmFetch.data.value && clearFields()
     }

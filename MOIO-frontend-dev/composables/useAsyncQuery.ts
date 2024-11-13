@@ -5,7 +5,6 @@ import { useUserStore } from '~/store/user'
 import useNotification from "~/composables/useNotification"
 import useValidationBackendError from "~/composables/useValidationBackendError"
 
-
 interface IArgs {
   axios: AxiosInstance
   path: string

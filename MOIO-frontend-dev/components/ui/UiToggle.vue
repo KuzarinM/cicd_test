@@ -1,16 +1,12 @@
 <template>
   <div :class="`toggle-switch-wrapper ${verticalLarge?'--vertical-large':''}`">
-    <label v-if="verticalLarge" for="toggle-switch">{{ openable ? "Открыть" : 'Вкл.' }}</label>
     <div :class="`toggle-switch ${verticalLarge?'--vertical-large':''}`">
       <input id="toggle-switch" v-model="currentValue" type="checkbox" class="toggle-switch__checkbox">
       <div class="toggle-switch__button">
-        <div class="toggle-switch__button-icon">
-          <ui-icon v-if="verticalLarge" :name="ico" size="40" />
-        </div>
+        <div class="toggle-switch__button-icon" />
       </div>
       <div class="toggle-switch__layer" />
     </div>
-    <label v-if="verticalLarge" for="toggle-switch">{{ openable ? "Закрыть" : 'Выкл.' }}</label>
   </div>
 </template>
 

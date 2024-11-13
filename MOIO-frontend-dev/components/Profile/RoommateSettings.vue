@@ -3,11 +3,8 @@
     <loader-screen :is-loading="isLoading" />
     <div class="roommate-settings__header">
       <h1 class="roommate-settings__header-text">
-        Настройки пользователя
+        Гость
       </h1>
-      <ui-button class-name="blank" padding="0" margin-inline="0" @click="(e:PointerEvent)=>emit('modalClose',e)">
-        <ui-icon name="close" size="24" />
-      </ui-button>
     </div>
     <div class="roommate-settings__user-info">
       <img v-if="avatarUrl?.length" :alt="`Аватар пользователя ${email}`" class="profile-card__avatar" :src="avatarUrl" width="136" height="136">
@@ -44,13 +41,12 @@
         </ui-any-list-item>
       </div>
       <div v-else class="roommate-settings__groups-container --empty">
-        У пользователя нет доступа к группам этого дома
+        У пользователя нет доступа к дочерним группам
       </div>
     </div>
     <ui-button
       class="roommate-settings__submit"
-      rounded="16px"
-      padding="4px 14px"
+      variant="secondary"
       @click="(e:PointerEvent)=>removeUserFromGroups(e)"
     >
       Сохранить
@@ -73,13 +69,14 @@ export interface IRoommateSettingsProps {
   }[]
 }
 
+
+const groupStore = useGroupsStore()
 const props = defineProps<IRoommateSettingsProps>()
-// ['modal-close', 'remove-user']
 const emit = defineEmits<{
     modalClose:[PointerEvent]
     removeUser:[void]
 }>()
-const groupStore = useGroupsStore()
+
 const existingGroups = ref<IRoommateSettingsProps["groups"]>(props.groups)
 const groupsForRemove = ref<string[]>([])
 const isLoading = ref(false)

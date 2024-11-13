@@ -2,7 +2,8 @@
   <transition :name="transitionFadeName" mode="out-in">
     <div v-show="isShown" ref="modal" :class="`modal ${isShown?'--shown':''}`" :style="backdropFilter?`-webkit-backdrop-filter:${backdropFilter};backdrop-filter:${backdropFilter};`:''">
       <transition :name="transitionContentName">
-        <div v-show="isShown" ref="inner" class="modal__content" :style="`background: ${bgColor}; width: min(${width}, 95%)`">
+        <div v-show="isShown" ref="inner" class="modal__content" :style="`background: ${bgColor}; width: min(${width}, 100%); border: ${border};`">
+          <ui-icon class="modal__content-btn" size="20" name="close-crest" color="#909090" @click="(e) => emit('clickOutside',e)" />
           <slot name="inner" />
         </div>
       </transition>
@@ -11,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+import UiIcon from "~/components/ui/UiIcon.vue"
 
 export interface MaskProps {
   bgColor?:string,
@@ -19,9 +21,10 @@ export interface MaskProps {
   transitionFadeName?:string
   transitionContentName?:string
   width?:string
+  border?: string
 }
 
-const props = withDefaults(defineProps<MaskProps>(), { bgColor: 'var(--bg-primary)', backdropFilter: '', transitionFadeName: 'no-transition', transitionContentName: 'no-transition', width: '400px' })
+const props = withDefaults(defineProps<MaskProps>(), { bgColor: 'var(--bg-primary)', backdropFilter: '', transitionFadeName: 'no-transition', transitionContentName: 'no-transition', width: '420px', border: 'none' })
 const emit = defineEmits<{
     clickOutside:[PointerEvent]
 }>()

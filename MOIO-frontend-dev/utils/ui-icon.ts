@@ -1,6 +1,26 @@
 
 import type { TUiIconNames } from "#build/types/ui-icon";
 export const uiIconNames:{ [key:string]: TUiIconNames[] } = {
+  "other": [
+    "arrow-down",
+    "category",
+    "check",
+    "chevron-right",
+    "close-crest",
+    "close",
+    "delete",
+    "logo",
+    "minus-thick",
+    "mode-high",
+    "mode-low",
+    "mode-medium",
+    "pencil",
+    "play",
+    "plus-thick",
+    "plus",
+    "service/other/help",
+    "service/other/lightning"
+  ],
   "aside": [
     "aside/automation",
     "aside/climate",
@@ -16,20 +36,10 @@ export const uiIconNames:{ [key:string]: TUiIconNames[] } = {
     "aside/room",
     "aside/scenarios",
     "aside/secure",
+    "aside/socket",
     "aside/theme",
-    "aside/water"
-  ],
-  "other": [
-    "check",
-    "chevron-right",
-    "close",
-    "delete",
-    "logo",
-    "minus-thick",
-    "pencil",
-    "plus-thick",
-    "plus",
-    "service/other/help"
+    "aside/water",
+    "aside/window"
   ],
   "header": [
     "header/dots-horizontal",
@@ -49,6 +59,7 @@ export const uiIconNames:{ [key:string]: TUiIconNames[] } = {
     "service/devices/ceiling-light-outline",
     "service/devices/chandelier",
     "service/devices/clock-time-three-outline",
+    "service/devices/curtains",
     "service/devices/desk-lamp",
     "service/devices/dome-light",
     "service/devices/door-open",
@@ -81,6 +92,7 @@ export const uiIconNames:{ [key:string]: TUiIconNames[] } = {
     "service/devices/water-pump",
     "service/devices/water-thermometer-outline",
     "service/other/help",
+    "service/other/lightning",
     "service/sensor/access-point",
     "service/sensor/fire-alert",
     "service/sensor/gesture-tap",
@@ -96,6 +108,7 @@ export const uiIconNames:{ [key:string]: TUiIconNames[] } = {
     "service/devices/ceiling-light-outline",
     "service/devices/chandelier",
     "service/devices/clock-time-three-outline",
+    "service/devices/curtains",
     "service/devices/desk-lamp",
     "service/devices/dome-light",
     "service/devices/door-open",

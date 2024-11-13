@@ -4,23 +4,35 @@ import useValidationBackendError from "~/composables/useValidationBackendError"
 export interface IAutomationUpdateProps {
   id: string,
   name: string,
-  scenarios: {
-     scenarioId: string,
-     orderId: number
-   }[]
+  scenariosIds: string[]
+  devicesValueStates:
+  {
+    [key: string]:
+    {
+      id: string
+      name: string
+      type: string,
+      value: string,
+      hsv?:
+      {
+        h: number,
+        s: number,
+        v: number
+      }
+    }[]
+  }
   newTriggers: IAutomationValue[]
   removeTriggerIds: string[]
-  allConditions: boolean
 }
 
-export default async function apiAutomationsUpdate (props:IAutomationUpdateProps) {
+export default async function apiAutomationsUpdate(props: IAutomationUpdateProps) {
   if (props.name.includes(`'`) || props.name.includes(`"`)) {
     useNotification('error', 'Недопустимый символ в названии автоматизации')
     return false
   }
   return await useAsyncQuery(async ({ axios, path }) => {
     try {
-      const response = await axios.put(path + '/v1/automations/update', props)
+      const response = await axios.put(path + '/v1/automations', props)
       if (response.status === 200) {
         useNotification('info', 'Автоматизация успешно обновлена')
         setTimeout(() => {

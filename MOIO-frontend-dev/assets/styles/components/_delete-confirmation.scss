@@ -1,0 +1,32 @@
+.delete-confirmation {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+
+    &__header {
+        @include capabilities-modal-header;
+        margin-bottom: 12px;
+    }
+
+    &__body {
+        @include header-submenu-item;
+        margin-bottom: 40px;
+    }
+
+    &__prompt {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        margin-top: auto;
+
+        &-item {
+            flex: 1;
+            line-height: 1.25 !important;
+        }
+
+        @media screen and (max-width: 425px) {
+            flex-direction: column;
+        }
+    }
+}

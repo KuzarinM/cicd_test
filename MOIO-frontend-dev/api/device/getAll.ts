@@ -1,28 +1,15 @@
 import useAsyncQuery from '~/composables/useAsyncQuery'
 import type { TUiIconNames } from "#build/types/ui-icon"
+import type { ICapability } from '../automations/getById'
 
 export interface IAllDevicesResponse {
     id: string
     name: string
     type: string
+    deviceCustomType: string
     deviceIcon: { name:TUiIconNames }|null
-    capabilities: {
-        type: string
-        retrievable: boolean
-        reportable: boolean
-        value: any
-        instance: string
-        range: {
-            min: number
-            max: number
-            precision: number
-        }
-        hsv: {
-            h: number
-            s: number
-            v: number
-        }
-    }[]
+    capabilities: ICapability[]
+    deviceRole: 'device' | 'sensor' | 'meter'
     properties: Array<{
         type: string
         retrievable: boolean

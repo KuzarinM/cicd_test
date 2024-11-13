@@ -4,11 +4,11 @@ import useValidationBackendError from "~/composables/useValidationBackendError"
 export interface IAddGroupPayload {
   name: string,
   typeId?: number,
-  parentId?:string,
+  parentId?: string,
   devicesIds?: string[]
   groupIds?: string[]
 }
-export default async function apiGroupAddRoom ({ name, typeId, parentId, devicesIds, groupIds }:IAddGroupPayload) {
+export default async function apiGroupAddGroup({ name, typeId, parentId, devicesIds, groupIds }: IAddGroupPayload) {
   if (name.includes(`'`) || name.includes(`"`)) {
     useNotification('error', 'Недопустимый символ в названии группы')
     return false

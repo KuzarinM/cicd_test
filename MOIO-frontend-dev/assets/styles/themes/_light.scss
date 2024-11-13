@@ -1,22 +1,42 @@
 [data-theme='theme-light']{
   --toastify-color-light:#EDF5FF;
   --toastify-text-color-light:#15161C;
-  --toastify-font-family:Jura, sans-serif;
+  --toastify-font-family:Manrope, sans-serif;
 
+  --color-bg:#F5F5F5;
+  --color-bg-hover: #F2F2F2;
+  --color-bg-secondary: #F2F2F2;
+  --color-bg-secondary-hover: #C5C5C5;
+  --color-bg-switch-active: rgba(229, 249, 254, 1);
+  --color-bg-switch: rgba(197, 197, 197, 1);
+  --color-service-border: rgba(28,28,30,0.2);
+  --color-test: rgba(28,28,30,0.6);
   --device-action:#D8E9FF;
+  --color-border: #F2F2F2;
   --color-primary: #15161C;
+  --color-translucent: rgba(28, 28, 30, 0.6);
   --color-accent: #15161C;
-  --color-active: #8DB8FF;
+  --color-active: #00C4F1;
+  --color-active-hover: #00B0DD;
   --color-inactive:#D8E9FF;
-  --bg-primary: #EDF5FF;
+  --color-profile-name: #1C1C1E99;
+  --color-profile-mail: #49494B;
+  --color-subheader-automation: #fff;
+  --color-icon-hover: #fff;
+  --bg-primary: #fff;
+  --bg-service-primary: rgba(255, 255, 255, 0.5);
+  --opacity: rgba(28,28,30,0);
+  --bg-service-primary-active: rgba(255,255,255,1);
+  --bg-service-active: rgba(0, 104, 165, 0.32);
   --bg-accent: #D9EEF9;
   --aside-header:#105FC2;
-  --main-bg-gradient-start:#c2ddf;
-  --main-bg-gradient-end: #fff;
+  --main-bg-gradient-start:rgba(34, 131, 221, 0.867);
+  --main-bg-gradient-end: #f887e5;
   --avatar-bg-gradient-start:#00D4FF;
   --avatar-bg-gradient-end:#87EBFF00;
   --divider-border-color:#A6C8DA;
   --service-shadow-color:147 186 255;
   --thumb-color:#D8E9FF;
   --settings-color:#EDF5FF;
+  --bg-smart-meter:rgba(255, 255, 255, 0.5);
 }

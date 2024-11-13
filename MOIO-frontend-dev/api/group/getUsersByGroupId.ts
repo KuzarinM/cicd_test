@@ -3,6 +3,7 @@ import useValidationBackendError from "~/composables/useValidationBackendError"
 
 export interface IUsersByGroupResponse {
   id: number,
+  userId?: number,
   name: string,
   login: string,
   isPending:boolean,

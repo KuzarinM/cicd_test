@@ -16,24 +16,24 @@ export const useScenarioStore = defineStore('scenario', {
 
   },
   actions: {
-    async createScenario (props:IAddScenario) {
+    async createScenario (props: IAddScenario) {
       return await apiScenariosAdd(props)
     },
-    async getAll (homeId:string) {
+    async getAll (homeId: string) {
       return await apiScenariosGetAll(homeId)
     },
-    async getById (id:string) {
+    async getById (id: string) {
       return await apiScenariosGetById(id)
     },
-    async executeScenario (id:string) {
+    async executeScenario (id: string) {
       if (id.length > 0) {
         return await apiScenariosExecute(id)
       }
     },
-    async updateScenario (data:IScenarioUpdateProps) {
+    async updateScenario (data: IScenarioUpdateProps) {
       return await apiScenariosUpdate(data)
     },
-    async deleteScenario (id:string) {
+    async deleteScenario (id: string) {
       await apiScenariosDelete(id)
     },
   },

@@ -3,7 +3,6 @@ import useValidationBackendError from "~/composables/useValidationBackendError"
 
 export interface IChangeLoginPayload {
     newLogin:string,
-    password:string
     confirmationCode?:string
 }
 export default async function apiUserChangeLogin (props:IChangeLoginPayload) {

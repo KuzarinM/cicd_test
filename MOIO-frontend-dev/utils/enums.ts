@@ -3,4 +3,5 @@ export enum AutomationConditionTypesEnum {
     temperature='temperature',
     time='time',
     timeRange='time-range',
+    days='days'
 }

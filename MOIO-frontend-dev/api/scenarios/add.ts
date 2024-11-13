@@ -2,20 +2,20 @@ import useValidationBackendError from "~/composables/useValidationBackendError"
 
 export interface IAddScenario {
   name: string,
-  homeId:string
-  devicesValueStates:{
-    [key:string]:{
-      type:string,
-      value:any,
-      hsv?:{
-        h:number,
-        s:number,
-        v:number
+  homeId: string
+  devicesValueStates: {
+    [key: string]: {
+      type: string,
+      value: any,
+      hsv?: {
+        h: number,
+        s: number,
+        v: number
       }
     }[]
   }
 }
-export default async function apiScenariosAdd (props:IAddScenario) {
+export default async function apiScenariosAdd (props: IAddScenario) {
   return await useAsyncQuery(async ({
     axios,
     path,
@@ -25,7 +25,7 @@ export default async function apiScenariosAdd (props:IAddScenario) {
       return false
     }
     try {
-      const response = await axios.post(path + 'v1/scenarios/create', props)
+      const response = await axios.post(path + '/v1/scenarios/create', props)
       if (response.status === 200) {
         useNotification('info', "Сценарий успешно добавлен")
         setTimeout(() => {

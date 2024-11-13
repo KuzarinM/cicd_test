@@ -33,8 +33,8 @@ const emit = defineEmits<{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: v-bind(size + 4);
-  height: v-bind(size + 4);
+  width: 24px;
+  height: 24px;
   input[type="checkbox"]{
     position: absolute;
     opacity: 0;
@@ -54,8 +54,8 @@ const emit = defineEmits<{
     width: 24px;
     height: 24px;
     background: v-bind(initialBg);
-    border-radius: 3px;
-    border: 2px solid v-bind(initialBg);
+    border-radius: 100%;
+    border: 2px solid $color-test;
     svg {
       opacity: 0;
     }

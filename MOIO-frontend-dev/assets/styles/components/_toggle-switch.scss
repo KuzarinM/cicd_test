@@ -20,36 +20,41 @@
   width: 60px;
   height: 36px;
   overflow: hidden;
-  border-radius: 100px;
+  border-radius: 50px;
+ 
   &.--vertical-large {
-    width: 74px;
-    height: 144px;
-    border-radius: 24px;
+    width: 52px;
+    height: 31px;
+    border-radius: 50px;
+    z-index: 1;
     .toggle-switch__layer{
-      border-radius: 24px;
+      border-radius: 50px;
+      background-color: $color-bg-switch;
     }
     .toggle-switch__button{
       display: flex;
-      justify-content: center;
+      justify-content: start;
+      align-items: center;
       &-icon{
-        width: 58px;
-        height: 64px;
+        width: 27px;
+        height: 27px;
         padding: 0;
-        border-radius: 20px;
+        border-radius: 100%;
         font-size: 40px;
-        transform: translateX(0) translateY(calc(100% + 8px));
+        transform: translateX(10%) translateY(0);
       }
     }
     
     .toggle-switch__checkbox {
       &:checked + .toggle-switch__button>.toggle-switch__button-icon {
-        transform: translateX(0) translateY(8px);
+        transform: translateX(85%) translateY(0);
         content: v-bind(ico);
-        background-color: $thumb-color;
+        background-color: $color-active;
+        filter: drop-shadow(0px 0px 5px rgba(0, 196, 241, 0.5));
       }
       
       &:checked ~ .toggle-switch__layer {
-        background-color: $color-active;
+        background-color: $color-bg-switch-active !important;
       }
     }
   }
@@ -59,7 +64,7 @@
       width: 20px;
       height: 10px;
       padding: 9px 4px;
-      background-color: $color-active;
+      background-color: #fff;
       border-radius: 50%;
       transition: all 0.3s;
       will-change: background-color, color;
@@ -88,7 +93,7 @@
     margin: 0;
     opacity: 0;
     cursor: pointer;
-    z-index: 3;
+    z-index: 4;
 
     &:checked + .toggle-switch__button>.toggle-switch__button-icon {
       transform: translateX(24px);

@@ -19,6 +19,10 @@ export default function useIcoByDeviceType (type:string):{name:TUiIconNames, cod
       return { name: 'service/devices/water-outline', code: '\\F0E0A' }
     case 'devices.types.openable.garage':
       return { name: 'service/devices/garage-variant', code: '\\F12D3' }
+    case 'devices.types.fan':
+      return { name: 'service/devices/air-conditioner', code: '\\' }
+    case 'devices.types.openable.curtain':
+      return { name: 'service/devices/curtains', code: '\\' }
     default:
       if (type.includes('devices.types.sensor')) {
         return { name: 'service/sensor/access-point', code: "\\F0003" }

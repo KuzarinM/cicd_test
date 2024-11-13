@@ -5,21 +5,21 @@
       Сценарии
     </h1>
     <div class="scenarios-available">
-      <h2 class="scenarios-available__header">
-        Список доступных сценариев
-      </h2>
       <div class="scenarios-available__list">
         <div
           v-for="scenario in scenariosFetch.data.value"
           :key="scenario.id"
-          class="scenarios-available__list-item" @click="executeScenario(scenario.id)"
+          class="scenarios-available__list-item"
         >
           <div class="scenarios-available__list-item-name">
             {{ scenario.name }}
           </div>
-          <nuxt-link :to="`/scenarios/edit/${scenario.id}`" class="scenarios-available__list-item-edit" @click.stop="false">
-            <ui-icon name="pencil" role="link" />
-          </nuxt-link>
+          <div style="display: flex; gap: 12px;">
+            <ui-icon class="scenarios-play" name="play" size="20" @click="executeScenario(scenario.id)" />
+            <nuxt-link :to="`/scenarios/edit/${scenario.id}`" class="scenarios-available__list-item-edit" @click.stop="false">
+              <ui-icon name="pencil" role="link" />
+            </nuxt-link>
+          </div>
         </div>
       </div>
     </div>

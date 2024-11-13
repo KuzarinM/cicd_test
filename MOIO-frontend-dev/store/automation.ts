@@ -4,11 +4,13 @@ import apiAutomationsCreate from "~/api/automations/create"
 import apiAutomationsGetAll from "~/api/automations/getAll"
 import apiAutomationsGetById from "~/api/automations/getById"
 import apiAutomationsRemove from "~/api/automations/remove"
+import apiAutomationsEnable, { type IAutomationEnable } from "~/api/automations/enable"
 import apiAutomationsUpdate, { type IAutomationUpdateProps } from "~/api/automations/update"
 
 export const useAutomationStore = defineStore('automation', {
   state: () => (
     {
+      step: 0,
     }),
   getters: {
 
@@ -23,11 +25,14 @@ export const useAutomationStore = defineStore('automation', {
     async getById (id:string) {
       return await apiAutomationsGetById(id)
     },
-    async deleteAutomation (id:string) {
-      return await apiAutomationsRemove([id])
+    async deleteAutomation (automationId:string) {
+      return await apiAutomationsRemove(automationId)
     },
     async update (props:IAutomationUpdateProps) {
       return await apiAutomationsUpdate(props)
+    },
+    async enable (props:IAutomationEnable) {
+      return await apiAutomationsEnable(props)
     },
   },
 })

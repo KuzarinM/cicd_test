@@ -2,7 +2,7 @@
   <div class="auth">
     <loader-screen :is-loading="isLoading" />
     <h1 class="auth__header">
-      Вход
+      Добро Пожаловать!
     </h1>
     <form method="post" class="auth__form" @submit.prevent="auth()">
       <auth-form-input

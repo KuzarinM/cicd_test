@@ -9,136 +9,91 @@
         <label for="group" class="add-group__label">Введите название этажа</label>
         <input id="group" v-model="name" type="text" name="group" class="add-group__input" required placeholder="Название этажа">
       </div>
-      <div v-if="existingHouses?.length" class="add-group__input-group">
-        <label for="house" class="add-group__label">Выберите дом </label>
-        <ui-select
-          :options="selectData"
-          :current-value="house"
-          select-name="Выберите дом"
-          @custom-select="(e)=>house = e"
-        />
-      </div>
-      <div v-if="house?.length>10 && name?.length" class="add-group-available-devices">
-        <h2 class="add-group-available-devices__header">
-          {{ existingDevices?.length?
-            'Доступные устройства':
-            'Устройства уже распределены по группам или не найдены'
-          }}
-        </h2>
-        <div v-if="existingDevices?.length>0" class="add-group-available-devices__list">
-          <ui-any-list-item
-            v-for="device in existingDevices"
+      <div v-if="existingDevices.length" class="add-group__input-group-flex">
+        <button class="add-group__label blank" @click.prevent="addDevice = true">
+          Аксессуары
+          <ui-icon
+            class="add-group__label-icon"
+            name="plus"
+          />
+        </button>
+        <div class="add-group-available-devices-now" v-show="devices.length">
+          <the-service
+            v-for="device in devices"
+            :id="device.id"
             :key="device.id"
-          >
-            <template #title>
-              {{ device?.name }}
-            </template>
-            <template #action>
-              <ui-checkbox
-                :checked="devices.findIndex(el=>el.id === device.id)>-1"
-                @check="(e)=>useSetItemOnCheckbox(e, devices, {id:device.id,name:device.name})"
+            :type="device.type"
+            :name="device.name"
+            :capabilities="device.capabilities"
+            :device-icon="device.deviceIcon"
+          />
+        </div>
+      </div>
+      <transition name="add-room">
+        <div v-if="addDevice" class="add-group-available-devices__add">
+          <div class="scrollable-content">
+            <h2 class="add-group-available-devices__add-header">
+              Добавить устройство
+            </h2>
+            <ui-icon class="add-group-available-devices__add-close" name="close" @click="addDevice = false" />
+            <div class="add-group-available-devices__add-flex">
+              <scenario-service
+                v-for="device in existingDevices"
+                :key="device.id"
+                v-bind="device"
+                :selected="checkIfDeviceChecked(device.id)"
+                :is-show-checkbox="true"
+                :is-hide-capability-modal="true"
+                @select-device="device => useSetItemOnCheckbox(!checkIfDeviceChecked(device.id), devices, device)"
               />
-            </template>
-          </ui-any-list-item>
-        </div>
-      </div>
-      <div v-if="house?.length>10 && previewData.name?.length" class="add-group-available-devices">
-        <h2 class="add-group-available-devices__header">
-          {{ existingRooms?.length?
-            'Доступные комнаты':
-            'Комнаты уже распределены по этажам или не найдены'
-          }}
-        </h2>
-        <div v-if="existingRooms?.length>0" class="add-group-available-devices__list">
-          <ui-any-list-item
-            v-for="room in existingRooms"
-            :key="room.id"
-          >
-            <template #title>
-              {{ room.name }}
-            </template>
-            <template #action>
-              <ui-checkbox
-                :checked="rooms.findIndex(el=>el.id === room.id)>-1"
-                @check="(e)=>useSetItemOnCheckbox(e, rooms,{id:room.id,name:room.name})"
-              />
-            </template>
-          </ui-any-list-item>
-        </div>
-      </div>
-      <div class="add-group__preview-wrapper">
-        <div v-if="previewData.name?.length" class="add-group__preview">
-          <div class="add-group__preview-section">
-            <div class="add-group__preview-section-title">
-              Название этажа
-            </div>
-            <div class="add-group__preview-section-value">
-              {{ previewData.name }}
-            </div>
-          </div>
-          <div class="add-group__preview-section">
-            <div class="add-group__preview-section-title">
-              Устройства этажа
-            </div>
-            <div v-if="previewData.devices?.length" class="add-group__preview-section-value">
-              <ui-any-list-item v-for="item in previewData.devices" :key="item.id">
-                <template #title>
-                  {{ item?.name }}
-                </template>
-                <template #action>
-                  <ui-button
-                    class-name="blank"
-                    padding="0"
-                    margin-inline="0"
-                    @click="useSetItemOnCheckbox(false,devices,{id:item.id,name:item.name})"
-                  >
-                    <ui-icon
-                      name="delete"
-                      color="#D15151"
-                      size="20"
-                    />
-                  </ui-button>
-                </template>
-              </ui-any-list-item>
-            </div>
-            <div v-else class="add-group__preview-section-value">
-              Нет выбранных устройств
-            </div>
-          </div>
-          <div class="add-group__preview-section">
-            <div class="add-group__preview-section-title">
-              Комнаты на этаже
-            </div>
-            <div v-if="previewData.rooms?.length" class="add-group__preview-section-value">
-              <ui-any-list-item v-for="item in previewData.rooms" :key="item.id">
-                <template #title>
-                  {{ item?.name }}
-                </template>
-                <template #action>
-                  <ui-button
-                    class-name="blank"
-                    padding="0"
-                    margin-inline="0"
-                    @click="useSetItemOnCheckbox(false,rooms,{id:item.id,name:item.name})"
-                  >
-                    <ui-icon
-                      name="delete"
-                      color="#D15151"
-                      size="20"
-                    />
-                  </ui-button>
-                </template>
-              </ui-any-list-item>
-            </div>
-            <div v-else class="add-group__preview-section-value">
-              Нет выбранных комнат
             </div>
           </div>
         </div>
+      </transition>
+      <div class="add-group__input-group-flex">
+        <button v-if="existingRooms?.length" class="add-group__label blank" @click.prevent="isAddRoom = !isAddRoom">
+          Добавить комнату
+          <ui-icon class="add-group__label-icon" name="plus"/>
+        </button>
+        <span v-else class="add-group__label">Комнаты уже распределены по этажам или не найдены</span>
+        <div class="added__rooms" v-show="rooms.length">
+          <div v-for="room in rooms" class="added__room-item">
+            <ui-icon name="aside/room" />
+            {{ room.name }}
+          </div>
+        </div>
       </div>
-      <div class="add-group__submit-wrapper">
-        <ui-button type="submit" rounded="16px">
-          Добавить
+      <transition name="add-room">
+        <div v-if="isAddRoom" class="add-group-available-devices__add">
+          <div class="scrollable-content">
+            <ui-icon class="add-group-available-devices__add-close" name="close" @click="isAddRoom = false" />
+            <h2 class="add-group-available-devices__add-header">
+              Добавить комнату
+            </h2>
+            <div class="add-group-available-devices__add-rooms">
+              <any-checkbox
+                v-for="room in existingRooms"
+                :key="room.id"
+                :is-checked="rooms.findIndex(el=>el.id === room.id)>-1"
+                @check="(e)=>useSetItemOnCheckbox(e, rooms, {id:room.id,name:room.name})"
+              >
+                <template #item="{isChecked}">
+                  <div class="rooms">
+                    {{ room.name }}
+                  </div>
+                </template>
+              </any-checkbox>
+            </div>
+          </div>
+        </div>
+      </transition>
+      
+      <div class="add-group__buttons">
+        <ui-button class="add-group__button" variant="secondary" @click="useGoToPreviousPage">
+          Отменить
+        </ui-button>
+        <ui-button class="add-group__button" variant="primary" type="submit">
+          Сохранить
         </ui-button>
       </div>
     </form>
@@ -148,28 +103,23 @@
 
 <script setup lang="ts">
 import { useGroupsStore } from "~/store/groups"
-import { useUserStore } from "~/store/user"
-import UiSelect from "~/components/ui/UiSelect.vue"
 import LoaderScreen from "~/components/shared/LoaderScreen.vue"
-import UiIcon from "~/components/ui/UiIcon.vue"
+import type { IAsideCategoryItem } from "~/components/Aside/AsideCategory.vue"
+import AnyCheckbox from "~/components/shared/AnyCheckbox.vue"
+import TheService from "~/components/Service/TheService.vue"
+import ScenarioService from "~/components/Scenarios/ScenarioService.vue"
+import type { IAllDevicesResponse } from "~/api/device/getAll"
 
 const groupStore = useGroupsStore()
 const isLoading = ref(false)
 const name = ref('')
 const house = ref(groupStore.currentHome)
-const devices = ref<{ id: string, name:string }[]>([])
+const devices = ref<IAllDevicesResponse[]>([])
 const rooms = ref<{ id: string, name:string }[]>([])
-const existingRooms = ref<{id:string, name:string}[]>()
-const existingHouses = ref()
-const existingDevices = ref()
-const upperGroups = ref(groupStore.upGroups)
-existingHouses.value = upperGroups.value.filter(el => el.groupCreatorId === useUserStore().id)
-const selectData = ref(existingHouses.value.reduce((acc:{description:string, value:string}[], curr:{name:string, id:string}) => [...acc, { description: curr.name, value: curr.id }], []))
-const previewData = ref({
-  name,
-  devices,
-  rooms,
-})
+const existingRooms = ref<IAsideCategoryItem[]>()
+  const existingDevices = ref<IAllDevicesResponse[]>([])
+const addDevice = ref(false)
+const isAddRoom = ref(false)
 async function getRoomsByHomeId () {
   isLoading.value = true
   await groupStore.getAll(house.value)
@@ -177,6 +127,8 @@ async function getRoomsByHomeId () {
   existingRooms.value = groupStore.rooms
 }
 getRoomsByHomeId()
+
+const checkIfDeviceChecked = (deviceId: string) => devices.value.findIndex(device => device.id === deviceId) > -1
 
 async function getDevicesByGroupId () {
   isLoading.value = true
@@ -198,16 +150,51 @@ async function addGroup () {
   }
   const devicesArrayId = devices.value.map(el => el.id)
   const roomsArrayId = rooms.value.map(el => el.id)
-  await groupStore.addRoom(name.value, 2, house.value, devicesArrayId?.length > 0 ? devicesArrayId : undefined, roomsArrayId.length > 0 ? roomsArrayId : undefined)
-  isLoading.value = false
-//   TODO отправить пользователя в свежесозаднную комнату. Будет сделано после рефакторинга бека
+  await groupStore.addGroup(name.value, groupStore.getGroupTypeId('Floor'), house.value, devicesArrayId?.length > 0 ? devicesArrayId : undefined, roomsArrayId.length > 0 ? roomsArrayId : undefined)
+//   TODO отправить пользователя в комнату, которая только что создана. Будет сделано после refactoring бека
 }
 watch(house, () => {
   getDevicesByGroupId()
   getRoomsByHomeId()
-  selectData.value = existingHouses.value.reduce((acc:{description:string, value:string}[], curr:{name:string, id:string}) => [...acc, { description: curr.name, value: curr.id }], [])
 })
 </script>
 <style lang="scss">
+.rooms{
+  border: 1px solid $color-border;
+  height: 120px;
+  border-radius: 12px;
+  padding: 20px;
+}
+.added{
+  &__rooms{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  &__room-item{
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+  }
+}
+.add-room-enter-active,
+.add-room-leave-active {
+  transition: all 0.5s ease;
+}
+
+.add-room-enter-from,
+.add-room-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+.add-room-enter-to,
+.add-room-leave-from {
+  transform: translateY(0);
+  opacity: 1;
+}
 @import "assets/styles/page/_user-add-room";
 </style>

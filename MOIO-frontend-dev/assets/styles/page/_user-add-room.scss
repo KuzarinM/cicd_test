@@ -1,46 +1,122 @@
-.add-group{
-  &__header{
+.add-group {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  @media screen and (max-width: 1200px) {
+    padding-bottom: 80px;
+  }
+
+  &__header {
     @include section-header;
-    width: 100%;
-    text-align: center;
+    color: #fff;
+    margin-right: 100px;
   }
-  &__form{
-    margin-top:40px;
+
+  &__delete {
+    background: none;
+    border: none;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap:40px;
-  }
-  &__input-group{
-    display: flex;
-    align-items: flex-start;
-    gap: 24px 8px;
-    flex-wrap: wrap;
-    width: min(95%, 387px);
-    align-content: flex-start;
-  }
-  &__label{
-    @include tool-item;
-    font-weight: 400;
-    width: 100%;
-  }
-  &__input{
-    width: 100%;
-    &[type="text"]{
-      @include action-item;
-      font-weight: 600;
-      border: none;
-      outline: none;
-      background-color: $settings-color;
-      padding: 12px 20px;
-      border-radius: 16px;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+
+    .ui-icon {
+      transition: all 0s;
     }
-    &-wrapper{
+
+    &:hover {
+      color: #ca1e1e;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 40px;
+  }
+
+  &__input-group,
+  &__input-group-flex {
+    flex-direction: column;
+  }
+
+  &__input-group-flex {
+    gap: 12px;
+  }
+
+  &__input-group,
+  &__input-group-flexrow {
+    width: min(100%, 387px);
+  }
+
+  &__input-group,
+  &__input-group-flexrow,
+  &__input-group-flex {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__input-group-flexrow .ui-icon {
+    color: #fff;
+  }
+
+  &__label {
+    width: fit-content;
+    text-align: start;
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+
+    &-icon {
+      vertical-align: middle;
+    }
+  }
+
+  &__name {
+    margin-bottom: 1px;
+  }
+
+  &__name,
+  &__input[type="text"] {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    outline: none;
+    background: none;
+    padding: 8px 0 8px 0;
+
+  }
+
+  &__input {
+    width: 70%;
+
+    &[type="text"] {
+      width: 100%;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      &:focus {
+        border-color: #fff;
+      }
+    }
+
+    &-wrapper {
       position: relative;
       background-color: $settings-color;
       border-radius: 15px;
       display: flex;
-      .floor-label{
+
+      .floor-label {
         padding: 8px 16px;
         font-size: 24px;
         font-weight: 400;
@@ -51,74 +127,173 @@
         background-color: $settings-color;
         inset: 0;
         cursor: pointer;
-        &.--active{
+
+        &.--active {
           background: $color-active;
         }
+
         @media screen and (max-width:768px) {
           font-size: 20px;
         }
       }
     }
-
   }
-  &__select{
+
+  &__select {
     background: $settings-color;
     color: $color-primary;
     padding: 12px;
-    border-radius: 15px;
+    border-radius: 12px;
     width: 100%;
-  }
-  &__submit-wrapper{
-    margin-top: 40px;
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 60px;
   }
 
-  .add-group-available-devices{
+  &__buttons {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: 225px 225px;
+    gap: 12px;
+
+    @media screen and (max-width:768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media screen and (max-width: 425px) {
+      grid-template-columns: 100%;
+    }
+  }
+
+  .add-group-available-devices {
     width: 100%;
     display: flex;
     flex-direction: column;
-    &__header{
-      text-align: center;
-      @include header-submenu-item;
+    justify-content: flex-start;
+
+    &__add {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      top: 20px;
+      width: calc(100% - 357px);
+      border-radius: 32px;
+      flex-wrap: wrap;
+      background-color: $bg-primary;
+      z-index: 10;
+      padding: 20px;
+      overflow-y: auto;
+
+      @media screen and (max-width: 1200px) {
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+        padding-right: 0;
+
+        .scrollable-content::-webkit-scrollbar-button:end:decrement {
+          height: 0;
+        }
+      }
+
+      &-header {
+        margin-top: 20px;
+        font-weight: 600;
+        font-size: 40px;
+      }
+
+      &-close {
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+
+      &-flex,
+      &-rooms {
+        margin-top: 40px;
+      }
     }
-    &__list{
-      width: min(100%,678px);
-      margin: 40px auto 0;
+
+    &-now,
+    &__add-flex,
+    &__add-rooms {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(153px, calc(50% - 12px)), 1fr));
+      gap: 12px;
+    }
+
+    &-now .service {
+      pointer-events: none;
+    }
+
+    &__header {
+      color: #fff;
+      @include aside-header;
+    }
+
+    &__list {
+      margin-top: 40px;
       display: flex;
+      flex-wrap: wrap;
       flex-direction: column;
+      width: 38%;
       gap: 12px;
     }
   }
-  .add-group__preview-wrapper{
+
+  .add-group__preview-wrapper {
     width: 100%;
   }
-  &__preview{
+
+  &__preview {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: min(100%,600px);
+    width: 100%;
     gap: 30px;
-    margin-inline: auto;
-    .add-group__preview-section{
+
+    .add-group__preview-section {
       width: 100%;
     }
-    .add-group__preview-section-title{
-      @include tool-item;
-      font-weight: 400;
-      text-align: center;
+
+    .add-group__preview-section-title {
+      @include aside-header;
+      color: #fff;
     }
-    .add-group__preview-section-value{
+
+    .add-group__preview-section-value {
       @include tool-item;
       text-align: center;
-      margin-top: 20px;
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
+  }
 
+  .profile-roommates-section__list {
+    margin: 0;
+    padding: 0;
+  }
+
+  .custom-select {
+
+    &__current-value,
+    &__options,
+    &__option {
+      padding: 12px;
+    }
+
+    &__current-value,
+    &__options {
+      background: $color-bg-hover;
+    }
+
+    &__option.--active:hover {
+      background: $color-active-hover;
+    }
+
+    &__option:hover,
+    &__current-value:hover {
+      background: $color-bg-secondary-hover;
+    }
   }
 }

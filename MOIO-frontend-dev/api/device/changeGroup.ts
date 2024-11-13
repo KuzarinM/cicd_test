@@ -1,6 +1,11 @@
 import useAsyncQuery from '~/composables/useAsyncQuery'
 import useValidationBackendError from "~/composables/useValidationBackendError"
 
+export interface IDeviceChangeGroup{
+  groupId:string | number | undefined,
+  devicesIds:string[]
+}
+
 export default async function apiDevicesChangeDevices (groupId:string, devicesIds:string[]) {
   return await useAsyncQuery(async ({ axios, path }) => {
     try {
@@ -8,8 +13,7 @@ export default async function apiDevicesChangeDevices (groupId:string, devicesId
         {
           groupId,
           devicesIds,
-        },
-      )
+        })
       if (response.status === 200) {
         return response
       }

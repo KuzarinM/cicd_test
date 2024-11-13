@@ -7,7 +7,7 @@ RUN npm i
 
 RUN npm run build
 
-FROM node:18-alpine
+FROM node:20.17.0-alpine
 
 COPY --from=build /app/.output /webapp/.output
 

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Hind+Siliguri:wght@300;400;500;600;700&family=Sarala:wght@400;700&display=swap');
 * {
   margin: 0;
   padding: 0;
@@ -21,12 +22,11 @@ html {
 body{
   height: 100%;
   overflow: hidden;
-  background: $main-bg-gradient-end;
 }
 .layout {
   *{
-  font-family: Jura, sans-serif;
-  font-weight: 600;
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
   color: $color-primary;
   }
   input[type="submit"] {
@@ -51,6 +51,7 @@ div{
   &::-webkit-scrollbar {
     border-radius: 2px;
     width: 8px;
+    height: 4px;
   }
   &::-webkit-scrollbar-track {
     background: $settings-color;
@@ -60,7 +61,12 @@ div{
   &::-webkit-scrollbar-thumb {
     background: $color-active;
     width: 8px;
-    border-radius: 12px;
+  }
+  &::-webkit-scrollbar-button:start:increment,
+  &::-webkit-scrollbar-button:end:decrement {
+    height: 0;
+    display: block;
+    background: transparent;
   }
 }
 button {
@@ -73,4 +79,7 @@ button.blank{
   background: transparent;
   cursor: pointer;
 }
-
+input {
+  appearance: none;
+  border-radius: 0;
+}

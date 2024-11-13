@@ -1,6 +1,7 @@
 import useAsyncQuery from '~/composables/useAsyncQuery'
 import useNotification from '~/composables/useNotification'
 import useValidationBackendError from "~/composables/useValidationBackendError"
+import { useGroupsStore } from '~/store/groups'
 
 export interface IGroupUser {
     userLogin:string
@@ -12,6 +13,7 @@ export interface IAddUserToGroupProps {
 }
 
 export default async function apiUsersPendingCreate (data:IAddUserToGroupProps) {
+  const groupStore = useGroupsStore()
   return await useAsyncQuery(async ({ axios, path }) => {
     try {
       const response = await axios.post(path + '/v1/pendingusersgroups/create', { ...data })

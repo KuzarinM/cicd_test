@@ -1,18 +1,17 @@
 .invited-house{
 	display: flex;
-	justify-content: space-between;
-	padding: 18px 32px;
-	border-radius: 16px;
+	justify-content: flex-start;
+	flex-direction: column;
+	border-radius: 12px;
 	background: $bg-primary;
 	@media screen and (max-width: 560px) {
-		flex-direction: column;
 		gap: 12px;
-		padding: 8px 16px;
 	}
 	&__info{
 		display: flex;
 		flex-direction: column;
 		gap:8px;
+		padding-bottom: 20px;
 		&-house-name{
 			@include action-item;
 		}
@@ -23,13 +22,11 @@
 	&__actions{
 		display: flex;
 		gap: 16px;
-		width: 70%;
-		justify-content: flex-end;
-		align-items: center;
+		&-action{
+			width: 410px;
+		}
 		@media screen and (max-width: 768px) {
-			width: 100%;
 			flex-wrap: wrap;
-			justify-content: center;
 		}
 		&-action {
 			margin: 0;

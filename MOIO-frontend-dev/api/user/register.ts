@@ -5,6 +5,7 @@ export interface IRegisterUserProps {
     name: string,
     login: string,
     password: string,
+    password1: string,
     clientId?:string,
     confirmationCode?:string
 }

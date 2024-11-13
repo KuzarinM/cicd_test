@@ -1,161 +1,224 @@
 .scenarios-create {
-	padding: 0 96px 100px;
-	@media screen and (max-width: 700px) {
-		padding: 0 20px 100px;
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+
+	@media screen and (max-width: 1200px) {
+		padding-bottom: 80px;
 	}
-	.group-list{
-		margin-top: 36px;
+
+	&__header {
+		@include section-header;
+		color: #fff;
+		margin-right: 100px;
+	}
+
+	&__label {
+		width: fit-content;
+		text-align: start;
+		font-size: 24px;
+		font-weight: 600;
+		color: #fff;
+
+		&-icon {
+			vertical-align: middle;
+		}
+	}
+
+	.group-list {
+		margin-top: 20px;
 		margin-inline: 0;
-		&__header{
+
+		&__header {
 			font-size: 24px;
 			font-weight: 400;
 			width: 100%;
-			text-align: center;
-			display: inline-block;
 		}
-		&.--child{
+
+		&.--child {
 			margin-left: 0;
 		}
+
 		.subgroup-item__service-list {
-			display: flex;
-			flex-wrap: wrap;
-			gap:28px;
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(min(153px, calc(50% - 12px)), 1fr));
+			gap: 12px;
 		}
 	}
-	.service{
-		width: min(192px, 100%);
-		padding: 14px 8px;
-		aspect-ratio: auto;
-		border-radius: 12px;
-		background: $settings-color;
-		border: 1px solid transparent;
-		&.--active {
-			box-shadow: 0px 0px 16px 0px $color-active;
-			-webkit-box-shadow: 0px 0px 16px 0px $color-active;
-			border: 1px solid $color-active;
+
+	&__test-button {
+		color: rgba(255, 255, 255, 0.6);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		transition: all 0.3s;
+		
+		.ui-icon {
+		  transition: all 0s;
 		}
-		&:not(.--active){
-			box-shadow: none;
-			-webkit-box-shadow: none;
+
+		&:hover {
+			color: $color-primary;
 		}
-		.service-info{
-			display: flex;
-			.service-name{
-				margin-top: 0;
-				font-size: 16px;
-				font-weight: 700;
-				margin-left: 22px;
-			}
-			.service-ico-wrapper {
-				width: 26px;
-				height: 38px;
-				display: flex;
-				align-items: center;
-				margin: 0;
-				.mdi{
-					font-size: 28px;
-				}
-			}
-		}
-		.ui-icon.--delete {
-			position: absolute;
-			bottom: 12px;
-			right: 16px;
-			font-size: 16px!important;
-			color: #D15151;
-			z-index: 9;
-		}
-	}
-	.scenarios-create__header{
-		font-size: 40px;
-		font-weight: 600;
+	} 
+
+	.ui-icon.--delete {
+		position: absolute;
+		top: 14px;
+		right: 10px;
+		font-size: 24px !important;
 		color: $color-primary;
-		text-align: center;
+		z-index: 9;
 	}
-	&__search{
+
+	&__flexrow {
+		display: flex;
+		gap: 8px;
+		
+		.ui-button {
+			color: #fff;
+		}
+	}
+
+	&__search {
+		width: min(100%, 387px);
 		display: flex;
 		flex-direction: column;
-		gap:12px;
-		width: min(95%, 346px);
-		margin-inline: auto;
-		margin-top: 48px;
-		label{
-			font-size: 20px;
-			font-weight: 400;
-			color: $color-primary;
-			text-align: center;
-		}
-		input {
-			border-radius: 16px;
-			background: $settings-color;
-			padding: 8px 16px;
-			display: inline-block;
-			outline: none;
+		gap: 12px;
+		
+		&-name, &-input {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			color: #fff;
+			font-size: 18px;
+			font-weight: 600;
 			border: none;
-			font-size: 20px;
-			text-align: center;
-			color: $color-active;
-			&::placeholder{
-				color: $color-active;
-				
+			outline: none;
+			background: none;
+			padding: 8px 0 8px 0;
+		}
+
+		&-name { 
+			margin-bottom: 1px;
+		}
+
+		&-input {
+			flex: 1;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+
+			&::placeholder {
+				color: rgba(255, 255, 255, 0.7);
+			}
+
+			&:focus {
+				border-color: #fff;
 			}
 		}
 	}
+
 	&__selected-list {
 		display: flex;
 		flex-direction: column;
-		margin-top: 60px;
-		&-header{
+
+		&-header {
 			width: 100%;
 			font-size: 24px;
 			font-weight: 400;
-			color: $color-primary;
+			color: #fff;
+			display: flex;
+			align-items: center;
+			gap: 8px;
 		}
 	}
-	&__selected-list-group{
+
+	&__selected-list-group {
 		display: flex;
 		flex-wrap: wrap;
-		padding-inline: 1.25em;
-		gap: 20px;
+
 		&-header {
 			font-size: 20px;
 			font-weight: 400;
-			color: $color-primary;
+			color: #fff;
 			width: 100%;
-			margin-top: 16px;
+			margin-top: 8px;
 		}
-		&-devices{
+
+		&-devices {
 			width: 100%;
-			display: flex;
-			flex-wrap: wrap;
-			gap:28px 30px;
-			padding-inline: 1em;
-			margin-top: 24px;
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(min(153px, calc(50% - 12px)), 1fr));
+			gap: 12px;
+			margin-top: 20px;
 		}
 	}
-	&__available{
-		&-header{
+
+	&__add {
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		background-color: $bg-primary;
+		z-index: 10;
+		padding: 60px 20px 20px;
+
+		&__header {
+			font-size: 44px;
+		}
+
+		&__close {
+			position: absolute;
+			right: 20px;
+			top: 20px;
+		}
+
+		@media (max-width: 1200px) {
+			padding-right: 0;
+		}
+	}
+
+	.scrollable-content {
+		&::-webkit-scrollbar-button:end:decrement {
+			height: 0;
+		}
+	}
+
+	&__available {
+		&-header {
+			color: #fff;
 			width: 100%;
 			font-size: 30px;
 			font-weight: 400;
-			text-align: center;
 			margin-top: 48px;
 		}
-		.scenarios-create__search{
+
+		.scenarios-create__search {
 			margin-top: 24px;
 		}
-		&-list{
+
+		&-list {
 			margin-top: 28px;
-			&.--empty{
+
+			&.--empty {
 				text-align: center;
 			}
 		}
 	}
-	&__save{
-		margin-top: 80px;
-		display: flex;
-		justify-content: center;
-		flex-wrap: wrap;
-		gap:32px;
+	
+	&__buttons {
+		margin-top: auto;
+		display: grid;
+		grid-template-columns: 225px 225px;
+		gap: 12px;
+	
+		@media screen and (max-width:768px) {
+		  grid-template-columns: 1fr 1fr;
+		}
+	
+		@media screen and (max-width: 425px) {
+		  grid-template-columns: 100%;
+		}
 	}
 }

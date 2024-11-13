@@ -1,14 +1,22 @@
 .profile{
-  width: min(792px, 95%);
   margin-inline: auto;
-  @media screen and (max-width: 1200px) {
-    padding-inline: min(9%, 75px);
-  }
-  &__divider{
-    margin-top: 28px;
+  padding: 0 4px;
+  height: auto;
+  @media screen and (max-width:1200px) {
+    padding-bottom: 70px;
   }
   &__leave-from-house-button{
     margin-top: 40px;
+  }
+  &-head{
+    @include section-header;
+    padding-bottom: 20px;
+  }
+  &__settings {
+    display: none;
+    @media screen and (max-width: 1200px) {
+      display: flex;
+    }
   }
 }
 .profile__sync-device{
@@ -16,8 +24,15 @@
 }
 .invited-house-section{
   margin-top: 48px;
+  @media screen and (max-width: 1200px) {
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid $color-border;
+  }
   &__header{
-    text-align: center;
+    border-top: 1px solid $color-border;
+    padding-top: 40px;
+    @include aside-header;
   }
   &__container{
     margin-top: 28px;
@@ -27,24 +42,28 @@
   }
 }
 .profile-roommates-section{
+  overflow-x: auto;
+  padding-bottom: 2px;
   &__header{
-    font-size: 25px;
-    font-weight: 600;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    @include aside-header;
     margin-top: 20px;
-    text-align: center;
-    @media screen and (max-width:768px) {
-      font-size: 20px;
+    color: #fff;
+    @media screen and (max-width:360px) {
+      font-size: 24px;
     }
   }
   &__add-section{
-    margin-top: 24px;
-    width: 52px;
-    height: 52px;
+    cursor: pointer;
+    margin: 0;
   }
   &__list {
     margin-top: 20px;
+    overflow-x: auto;
+    padding-bottom: 10px;
     display: flex;
-    flex-direction: column;
     gap: 12px;
   }
 }

@@ -1,138 +1,146 @@
 <template>
-  <div class="automation-select-range">
-    <div class="automation-select-range__header">
-      <div class="automation-select-range__header-text">
-        Состояние устройства
-      </div>
-      <ui-button
-        class-name="blank"
-        margin-inline="0"
-        padding="0"
-        @click="saveChanges()"
-      >
-        <ui-icon :name="'close'" />
-      </ui-button>
-    </div>
-    <div class="automation-select-range__info">
-      <div class="automation-select-range__info-item">
-        <label class="automation-select-range__info-item-label" for="name">
-          Название:
-        </label>
-        <div class="automation-select-range__info-item-value">
-          {{ name }}
+  <div v-if="isShown" class="automation-select-range">
+    <div class="scrollable-content">
+      <div class="automation-select-range__header">
+        <div class="automation-select-range__header-text">
+          Условия
         </div>
-      </div>
-    </div>
-    <div class="automation-select-range__nav">
-      <div class="automation-select-range__nav-header">
-        Укажите значение устройства:
-      </div>
-      <div class="automation-select-range__nav-items">
-        <div
-          :class="`automation-select-range__nav-item ${currentNav === 1 ? '--active':''}`"
-          @click="currentNav = 1"
+        <ui-button
+          class-name="blank"
+          class="back"
+          margin-inline="0"
+          padding="0"
+          @click="emit('prevStep',{step: 1})"
         >
-          Диапазон
-        </div>
-        <div
-          :class="`automation-select-range__nav-item ${currentNav === 0 ? '--active':''}`"
-          @click="currentNav = 0"
+          <ui-icon :name="'close'" />
+        </ui-button>
+        <ui-button
+          class-name="blank"
+          margin-inline="0"
+          padding="0"
+          rounded="12px"
+          class="next"
+          @click="emit('nextStep',{step: 3}),saveChanges()"
         >
-          Одно значение
-        </div>
+          Далее
+        </ui-button>
       </div>
-    </div>
-    <div class="automation-select-range__tabs">
-      <div class="automation-select-range__tabs-header">
-        Укажите значение:
-      </div>
-      <transition name="fade">
-        <div v-show="currentNav === 1" class="automation-select-range__tab">
-          <div class="automation-select-range__tab-value">
-            <label for="from">От</label>
-            <span class="input-wrapper">
-              <input
-                id="from"
-                v-model.number="startValue"
-                type="number"
-                :min="range?.min ?? 0"
-                :max="(endValue ?? 100) - 1"
-                @focusout="startValue = validateInputNumber(startValue, range?.min ?? 0,endValue ?? 100)"
-              >
-            </span>
-            <label for="to">До</label>
-            <span class="input-wrapper">
-              <input
-                id="to"
-                v-model.number="endValue"
-                type="number"
-                :min="(startValue ?? 0) + 1"
-                :max="range?.max ?? 100"
-                @focusout="endValue = validateInputNumber(endValue, startValue,range?.max ?? 100)"
-              >
-            </span>
+      <div class="automation-select-range__info">
+        <div class="automation-select-range__info-item">
+          <label class="automation-select-range__info-item-label" for="name">
+            Когда
+          </label>
+          <div class="automation-select-range__info-item-value">
+            {{ name }}
           </div>
         </div>
-      </transition>
-      <transition name="fade">
-        <div v-show="currentNav === 0" class="automation-select-range__tab">
-          <div class="automation-select-range__tab-value">
-            <span class="input-wrapper">
-              <input
-                id="value"
-                v-model.number="singleValueCondition.value"
-                type="number"
-                @focusout="singleValueCondition.value = validateInputNumber(singleValueCondition.value, (range?.min ?? 0) + 1,range?.max ?? 100)"
-              >
-            </span>
-          </div>
-          <div class="automation-select-range__tab-value-condition">
-            <div class="automation-select-range__tab-value-condition-header">
-              Условие срабатывает, если:
-            </div>
-            <div class="automation-select-range__tab-value-condition-list">
-              <div
-                :class="`automation-select-range__tab-value-condition-item ${singleValueCondition.condition === 1 ? '--active' : ''}`"
-                @click="singleValueCondition.condition = 1"
-              >
-                Устройство приняло значение больше установленного
-              </div>
-              <div
-                :class="`automation-select-range__tab-value-condition-item ${singleValueCondition.condition === 0 ? '--active' : ''}`"
-                @click="singleValueCondition.condition = 0"
-              >
-                Устройство приняло значение меньше установленного
-              </div>
-              <div
-                :class="`automation-select-range__tab-value-condition-item ${singleValueCondition.condition === 2 ? '--active' : ''}`"
-                @click="singleValueCondition.condition = 2"
-              >
-                Устройство приняло установленное значение
-              </div>
+      </div>
+      <div class="automation-select-range__tabs">
+        <div class="automation-select-range__tabs-header">
+          Температура
+        </div>
+        <transition name="fade">
+          <div v-show="currentNav === 1" class="automation-select-range__tab">
+            <div class="automation-select-range__tab-value">
+              <label for="from">От</label>
+              <span class="input-wrapper">
+                <input
+                  id="from"
+                  v-model.number="startValue"
+                  type="number"
+                  :min="range?.min ?? 0"
+                  :max="(endValue ?? 100) - 1"
+                  @focusout="startValue = validateInputNumber(startValue, range?.min ?? 0,endValue ?? 100)"
+                >
+              </span>
+              <label for="to">До</label>
+              <span class="input-wrapper">
+                <input
+                  id="to"
+                  v-model.number="endValue"
+                  type="number"
+                  :min="(startValue ?? 0) + 1"
+                  :max="range?.max ?? 100"
+                  @focusout="endValue = validateInputNumber(endValue, startValue,range?.max ?? 100)"
+                >
+              </span>
             </div>
           </div>
-        </div>
-      </transition>
+        </transition>
+        <transition name="fade">
+          <div v-show="currentNav === 0" class="automation-select-range__tab">
+            <div class="automation-select-range__tab-value-condition">
+              <div class="automation-select-range__tab-value-condition-list">
+                <div
+                  :class="`automation-select-range__tab-value-condition-item`"
+                  @click="singleValueCondition.condition = 1"
+                >
+                  <ui-checkbox
+                    :initial-bg="'var(--settings-color)'"
+                    :checked="singleValueCondition.condition === 1"
+                    @check="singleValueCondition.condition = 1"
+                  />
+                  Поднимается выше
+                </div>
+
+                <div
+                  :class="`automation-select-range__tab-value-condition-item`"
+                  @click="singleValueCondition.condition = 0"
+                >
+                  <ui-checkbox
+                    :initial-bg="'var(--settings-color)'"
+                    :checked="singleValueCondition.condition === 0"
+                    @check="singleValueCondition.condition = 0"
+                  />
+                  Опускается ниже
+                </div>
+
+                <div
+                  :class="`automation-select-range__tab-value-condition-item`"
+                  @click="singleValueCondition.condition = 2"
+                >
+                  <ui-checkbox
+                    :initial-bg="'var(--settings-color)'"
+                    :checked="singleValueCondition.condition === 2"
+                    @check="singleValueCondition.condition = 2"
+                  />
+                  Равна
+                </div>
+              </div>
+              <div class="automation-select-range__tab-value">
+                <span class="input-wrapper">
+                  <input
+                    id="value"
+                    v-model.number="scrollPickerModal"
+                    type="number"
+                    @focusout="singleValueCondition.value = validateInputNumber(singleValueCondition.value, (range?.min ?? 0) + 1,range?.max ?? 100)"
+                  >°C
+                </span>
+                <ScrollPicker
+                  v-model="scrollPickerModal"
+                  :options="options"
+                />
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
     </div>
-    <ui-button
-      rounded="16px"
-      padding="8px"
-      @click="saveChanges()"
-    >
-      Сохранить состояние
-    </ui-button>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ICapability } from "~/components/Service/TheService.vue"
+import type { ICapability } from '~/api/automations/getById';
 import type { IAutomationValue } from "~/api/automations/create"
+import 'vue-drumroll-datetime-picker/dist/style.css'
+import ScrollPicker from "vue3-scroll-picker"
+import "vue-scroll-picker/lib/style.css"
 
 export interface IAutomationSelectRangeProps {
   name:string
   range?:ICapability['range']
+  isShown?:boolean
 }
-
 const props = defineProps<IAutomationSelectRangeProps>()
 const emit = defineEmits<{
   saveAutomationCondition:[
@@ -140,11 +148,23 @@ const emit = defineEmits<{
   ],
   saveTemperatureRange:[
       value:Exclude<IAutomationValue["temperatureRange"], undefined>
-  ]
+  ],
+  nextStep:[{step:number}]
+  prevStep:[{step:number}]
 }>()
+
 const currentNav = ref(0)
-const startValue = ref<number>(props.range?.min)
-const endValue = ref<number>(props.range?.max)
+const startValue = computed(() => props.range?.min ?? 0)
+const endValue = computed(() => props.range?.max ?? 100)
+const scrollPickerModal = ref([startValue.value])
+const options = computed(() => {
+  const arra:[{value:number, label:number}[]] = [[]]
+  for (let i = startValue.value; i <= endValue.value; i++) {
+    arra[0].push({ value: i, label: i })
+  }
+  return arra
+})
+
 const singleValueCondition = ref<Exclude<IAutomationValue["automationCondition"], undefined>>({
   value: 0, condition: 0,
 })
@@ -157,6 +177,7 @@ function validateInputNumber (value:number, min:number, max:number) {
   return value
 }
 function saveChanges () {
+  singleValueCondition.value.value = scrollPickerModal.value[0]
   if (currentNav.value === 0) {
     emit('saveAutomationCondition', { ...singleValueCondition.value })
   }
@@ -165,53 +186,89 @@ function saveChanges () {
   }
 }
 
-watch(props, () => {
-  singleValueCondition.value.value = props.range?.min
-  startValue.value = props.range?.min
-  endValue.value = props.range?.max
-}, { deep: true })
+watch(startValue, (newValue) => {
+  scrollPickerModal.value = [newValue ?? 0]
+}, { deep: true, immediate: true })
 </script>
 
 <style lang="scss">
+.add-menu-enter-active,
+.add-menu-leave-active {
+  transition: all 0.5s ease;
+}
+
+.add-menu-enter-from,
+.add-menu-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+.add-menu-enter-to,
+.add-menu-leave-from {
+  transition: 0.5s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+.timePicker-enter-active,
+.timePicker-leave-active {
+  transition: all 0.5s ease;
+}
+
+.timePicker-enter-from,
+.timePicker-leave-to {
+  opacity: 0;
+}
+.timePicker-enter-to,
+.timePicker-leave-from {
+  transition: 0.5s ease;
+  opacity: 1;
+}
 .automation-select-range{
   @include device-item;
-  width: 100%;
-  max-height: 85dvh;
   overflow-y: auto;
   overflow-x: clip;
+  position: absolute;
+  z-index: 11;
+  padding: 20px;
+  background-color: $bg-primary;
+  inset: 0;
+  overflow: hidden;
+  @media (max-width: 1200px) {
+      padding-right: 0;
+    }
   &__header{
     width: 100%;
-    text-align: center;
+    padding-top: 40px;
     position: relative;
     @include action-item;
     &-text{
-      width: calc(100% - 18px);
-      text-align: center;
+      width: 80%;
+      font-size: 44px;
+      font-weight: 600;
     }
     .ui-button{
       position: absolute;
-      right: 0;
+      left: 0;
       top: 0;
     }
   }
   &__info{
-    margin-top: 32px;
+    margin-top: 20px;
   }
   &__info-item{
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+    label{
+      font-size: 24px;
+      font-weight: 600;
+    }
     &-value{
       @include tool-item;
-      background: $settings-color;
-      border-radius: 16px;
-      max-height: calc(16px + 24px);
+      border-radius: 12px;
       padding: 6px 4px;
-      text-align: center;
-      width: min(200px, 95%);
-      display: -webkit-box;
+      display: --box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
@@ -248,37 +305,34 @@ watch(props, () => {
   }
   &__tabs{
     margin-top: 20px;
+    &-header{
+      border-top: 1px solid $color-border;
+      padding-top: 40px;
+      font-size: 24px;
+      font-weight: 600;
+    }
   }
   &__tab{
     margin-top: 24px;
     padding-inline: 8px;
     &-value{
       display: flex;
-      justify-content: center;
       align-items: center;
       gap:12px;
       .input-wrapper{
         position: relative;
-        //&:before{
-        //  display: block;
-        //  position: absolute;
-        //  content: '°C';
-        //  color: $bg-primary;
-        //  font-weight: 600;
-        //  font-size: 20px;
-        //  z-index: 1;
-        //}
+        border: 1px solid $color-border ;
+        border-radius: 12px;
         input[type=number]{
-          color: $bg-primary;
-          font-weight: 600;
+          color: $color-primary;
+        font-weight: 600;
           font-size: 20px;
-          background: $color-active;
+          background: $bg-primary;
           outline: 0;
           border: 0;
           width: 80px;
           padding: 12px 8px;
           text-align: center;
-          border-radius: 16px;
           -moz-appearance: textfield;
           position: relative;
           @media screen and (max-width: 768px) {
@@ -296,15 +350,16 @@ watch(props, () => {
         text-align: center;
         margin-top: 32px;
       }
-
+      &-condition-list{
+        margin-bottom: 40px;
+      }
       &-condition-item{
+        display: flex;
+        align-items: center;
+        gap: 12px;
         margin-top: 20px;
-        padding: 12px;
         @include device-item;
-        background: $settings-color;
-        border-radius: 8px;
         cursor: pointer;
-        box-shadow: 0 0 4px $color-active;
         &.--active{
           background: $color-active;
           color: $bg-primary;
@@ -312,8 +367,22 @@ watch(props, () => {
       }
     }
   }
-  &>.ui-button{
-    margin-top: 40px;
+  .save{
+    .back{
+      margin-top: 40px;
+      display: flex;
+      width: 20%;
+      z-index: 2;
+    }
+  }
+  .next{ 
+    position: absolute;
+    left: calc(100% - 20px);
+    transform: translateX(-100%);
+    width: fit-content;
+    z-index: 1;
+    color: $color-active;
+    cursor: pointer;
   }
 }
 </style>

@@ -15,12 +15,12 @@ import type { IChangeLoginPayload } from "~/api/user/changeLogin"
 import apiUserChangeLogin from "~/api/user/changeLogin"
 import apiUserGetById from "~/api/user/getUserById"
 
-export interface IDecodedJwt{
-  Id:string
-  aud:string
-  exp:number
-  iss:string
-  nbf:number
+export interface IDecodedJwt {
+  Id: string
+  aud: string
+  exp: number
+  iss: string
+  nbf: number
 }
 const cookieOptions = {
   maxAge: 30 * 24 * 60 * 60,
@@ -51,7 +51,7 @@ export const useUserStore = defineStore('user', {
     },
   },
   actions: {
-    decodeJWT (jwt: string):IDecodedJwt {
+    decodeJWT (jwt: string): IDecodedJwt {
       const base64Url = jwt.split('.')[1]
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
       const jsonPayload = decodeURIComponent(
@@ -64,7 +64,7 @@ export const useUserStore = defineStore('user', {
       )
       return JSON.parse(jsonPayload)
     },
-    async register (props:IRegisterUserProps) {
+    async register (props: IRegisterUserProps) {
       const { accessToken, refreshToken } = await apiUserRegister(props) || {}
       if (accessToken) {
         const config = useRuntimeConfig()
@@ -74,8 +74,9 @@ export const useUserStore = defineStore('user', {
         window.location.pathname = '/'
         return refreshToken
       }
+      return refreshToken
     },
-    async auth (props:IAuthUserProps) {
+    async auth (props: IAuthUserProps) {
       const { accessToken, username, refreshToken, id } = await apiUserAuth(props)
       if (accessToken) {
         const config = useRuntimeConfig()
@@ -126,19 +127,19 @@ export const useUserStore = defineStore('user', {
         this.clientId = userData.clientId
       }
     },
-    async changeName (name:string) {
+    async changeName (name: string) {
       return await apiUserChangeName(name)
     },
-    async changeClientId (clientId:string) {
+    async changeClientId (clientId: string) {
       return await apiUserChangeClientId(clientId)
     },
-    async changePassword (props:IChangePasswordPayload) {
+    async changePassword (props: IChangePasswordPayload) {
       return await apiUserChangePassword(props)
     },
-    async changeLogin (props:IChangeLoginPayload) {
+    async changeLogin (props: IChangeLoginPayload) {
       return await apiUserChangeLogin(props)
     },
-    async getUserById (id:number) {
+    async getUserById (id: number) {
       return await apiUserGetById(id)
     },
   },

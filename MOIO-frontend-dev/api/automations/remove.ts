@@ -1,9 +1,9 @@
 import useValidationBackendError from "~/composables/useValidationBackendError"
 
-export default async function apiAutomationsRemove (props:string[]) {
+export default async function apiAutomationsRemove (automationId: string) {
   return await useAsyncQuery(async ({ axios, path }) => {
     try {
-      const response = await axios.delete(path + '/v1/automations/remove', { data: props })
+      const response = await axios.delete(path + '/v1/automations/' + automationId)
       console.log(response)
       if (response?.status === 200) {
         useNotification('info', 'Автоматизация успешно удалена')

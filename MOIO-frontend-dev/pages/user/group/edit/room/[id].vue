@@ -1,154 +1,163 @@
 <template>
-  <div class="add-group --edit">
+  <div class="add-group">
     <loader-screen :is-loading="isLoading" />
-    <div class="add-group">
-      <h1 class="add-group__header">
-        Изменить комнату
-      </h1>
-      <form method="post" class="add-group__form" @submit.prevent="editGroup()">
-        <div class="add-group__input-group">
-          <label for="group" class="add-group__label">Введите название комнаты</label>
-          <input
-            id="group"
-            v-model="name"
-            type="text"
-            name="group"
-            class="add-group__input"
-            placeholder="Название комнаты"
-            required
-          >
-        </div>
-        <div v-if="house?.length>1" class="add-group-available-devices">
-          <h2 class="add-group-available-devices__header">
-            {{ existingDevices?.length?
-              'Доступные устройства':
-              'Устройства уже распределены по группам или не найдены'
-            }}
-          </h2>
-          <div v-if="existingDevices?.length>0" class="add-group-available-devices__list">
-            <ui-any-list-item
-              v-for="item in existingDevices" :key="item.id"
+    <h1 class="add-group__header">
+      Изменить комнату
+    </h1>
+
+    <form method="post" class="add-group__form" @submit.prevent="editGroup()">
+      <div class="add-group__input-group">
+        <div class="add-group__input-group-flex">
+          <label for="group" class="add-group__label">Название комнаты</label>
+          <div class="add-group__input-group-flexrow">
+            <span class="add-group__name" v-show="!isNameChanging">{{ name }}</span>
+            <input
+              v-show="isNameChanging"
+              id="group"
+              v-model="name"
+              type="text"
+              name="group"
+              class="add-group__input"
+              placeholder="Название комнаты"
+              required
             >
-              <template #title>
-                {{ item?.name }}
-              </template>
-              <template #action>
-                <ui-checkbox
-                  :checked="devices.findIndex(el=>el.id === item.id)>-1"
-                  @check="(e)=>useSetItemOnCheckbox(e,devices,{id:item.id,name:item.name})"
-                />
-              </template>
-            </ui-any-list-item>
-          </div>
-        </div>
-        <div class="add-group__preview-wrapper">
-          <div v-if="previewData.name?.length" class="add-group__preview">
-            <div class="add-group__preview-section">
-              <div class="add-group__preview-section-title">
-                Название комнаты
-              </div>
-              <div class="add-group__preview-section-value">
-                {{ previewData.name }}
-              </div>
-            </div>
-            <div class="add-group__preview-section">
-              <div class="add-group__preview-section-title">
-                Устройства комнаты
-              </div>
-              <div v-if="devices?.length" class="add-group__preview-section-value">
-                <ui-any-list-item
-                  v-for="item in devices"
-                  :key="item.id"
-                >
-                  <template #title>
-                    {{ item?.name }}
-                  </template>
-                  <template #action>
-                    <ui-button
-                      padding="0"
-                      class-name="blank"
-                      @click="(e)=>{
-                        useSetItemOnCheckbox(false,devices,{id:item.id,name:item.name});
-                        useSetItemOnCheckbox(true,existingDevices,{id:item.id,name:item.name});
-                      }"
-                    >
-                      <ui-icon
-                        name="delete"
-                        color="#D15151"
-                        size="20"
-                      />
-                    </ui-button>
-                  </template>
-                </ui-any-list-item>
-              </div>
-              <div v-else class="add-group__preview-section-value">
-                Нет выбранных устройств
-              </div>
-            </div>
-            <div class="add-group__preview-section">
-              <div class="add-group__preview-section-title">
-                Гости комнаты
-              </div>
-              <div v-if="previewData.users?.length" class="add-group__preview-section-value">
-                <ui-any-list-item
-                  v-for="user in previewData.users" :key="user.id"
-                >
-                  <template #title>
-                    {{ user?.name }}
-                  </template>
-                  <template #action>
-                    <ui-button
-                      padding="0"
-                      class-name="blank"
-                      @click="(e)=>{
-                        usersForRemove.push({id:user.id,name:user.name});
-                        users.splice(users.findIndex(el=>el.id === user.id),1)
-                      }"
-                    >
-                      <ui-icon
-                        v-if="user.id !== groupStore.group.groupCreatorId"
-                        name="delete"
-                        color="#D15151"
-                        size="20"
-                      />
-                    </ui-button>
-                  </template>
-                </ui-any-list-item>
-              </div>
-              <div v-else class="add-group__preview-section-value">
-                Нет приглашенных пользователей
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="add-group__submit-wrapper">
-          <ui-button type="submit" margin-inline="0" rounded="16px">
-            Сохранить
-          </ui-button>
-          <form method="post" @submit.prevent="deleteGroup()">
             <ui-button
-              type="submit"
-              class-name="delete"
-              rounded="16px"
-              margin-inline="0"
+              v-show="!isNameChanging"
+              class-name="blank"
+              padding="0"
+              @click="isNameChanging=!isNameChanging"
             >
-              Удалить
+              <ui-icon name="pencil" size="24" color="$color-icon-hover" />
             </ui-button>
-          </form>
+
+            <ui-button
+              v-show="isNameChanging"
+              class-name="blank"
+              padding="0"
+              @click="isNameChanging=!isNameChanging"
+            >
+              <ui-icon name="check" size="24" color="$color-icon-hover" />
+            </ui-button>
+          </div>
+          <button class="add-group__delete" type="button" @click="isModalOpen = true">
+            <ui-icon
+              size="20"
+              name="delete"
+            />
+            Удалить комнату
+          </button>
+          <delete-confirmation :is-modal-open="isModalOpen" @cancel="isModalOpen = false" @delete="deleteGroup">
+            <template #heading>
+              Удалить комнату?
+            </template>
+            <template #description>
+              Устройства, находящиеся в комнате, будут перемещены к нераспределенным устройствам
+            </template>
+          </delete-confirmation>
         </div>
-      </form>
-    </div>
+      </div>
+      <div v-if="house?.length>1 && existingDevices?.length" class="add-group__input-group-flex">
+        <button class="add-group__label blank" @click.prevent="addDevice = !addDevice">
+          Аксессуары
+          <ui-icon
+            class="add-group__label-icon"
+            name="plus"
+          />
+        </button>
+        <div class="add-group-available-devices-now">
+          <the-service
+            v-for="device in devices"
+            :id="device.id"
+            :key="device.id"
+            :type="device.type"
+            :device-custom-type="device.deviceCustomType"
+            :name="device.name"
+            :capabilities="device.capabilities"
+            :device-icon="device.deviceIcon"
+          />
+        </div>
+          <transition name="add-menu">
+            <div v-if="addDevice" class="add-group-available-devices__add">
+              <div class="scrollable-content">
+                <h2 class="add-group-available-devices__add-header">
+                  Добавить устройство
+                </h2>
+                <ui-icon class="add-group-available-devices__add-close" name="close" @click="addDevice = false" />
+                <div class="add-group-available-devices__add-flex">
+                  <scenario-service
+                    v-for="device in existingDevices"
+                    :key="device.id"
+                    v-bind="device"
+                    :selected="checkIfDeviceChecked(device.id)"
+                    :is-show-checkbox="true"
+                    :is-hide-capability-modal="true"
+                    @select-device="device => useSetItemOnCheckbox(!checkIfDeviceChecked(device.id), devices, device)"
+                  />
+                </div>
+              </div>
+            </div>
+          </transition>
+      </div>
+      <div v-if="previewData.users?.length" class="add-group__input-group-flex add-group__preview-section">
+        <div class="add-group__label">
+          Гости
+        </div>
+          <div class="profile-roommates-section__list">
+            <profile-roommates
+              v-for="user in users"
+              :id="user.id"
+              :key="user.id"
+              :name="user.name"
+              :login="user.login"
+              :groups="user.groupsIsPending"
+              :is-pending="user.isPending"
+              :is-change="true"
+              @remove-user="getRoommates()"
+              @user-for-remove="removeUser(user)"
+            />
+        </div>
+        <ui-modal
+          ref="addRoommateModal"
+          :is-shown="groupStore.isAddRoommates"
+          backdrop-filter="blur(3px)"
+          transition-fade-name="fade"
+          transition-content-name="translate"
+          place=".layout"
+          width="528px"
+          @click-outside="groupStore.isAddRoommates = false"
+        >
+          <template #inner>
+            <add-roommate-modal
+              @modal-close="groupStore.isAddRoommates = false"
+              @add-roommate="getRoommates()"
+            />
+          </template>
+        </ui-modal>
+      </div>
+      <div class="add-group__buttons">
+        <ui-button class="add-group__button" variant="secondary" @click="useGoToPreviousPage">
+          Отменить
+        </ui-button>
+        <ui-button class="add-group__button" variant="primary" type="submit">
+          Сохранить
+        </ui-button>
+      </div>
+    </form>
   </div>
 </template>
 
 
 <script setup lang="ts">
 import { useGroupsStore } from "~/store/groups"
+import TheService from "~/components/Service/TheService.vue"
 import LoaderScreen from "~/components/shared/LoaderScreen.vue"
+import DeleteConfirmation from "~/components/DeleteConfirmation/DeleteConfirmation.vue"
 import UiIcon from "~/components/ui/UiIcon.vue"
-import UiAnyListItem from "~/components/ui/UiAnyListItem.vue"
+import ScenarioService from "~/components/Scenarios/ScenarioService.vue"
 import useDataForGroupEdit from "~/composables/useDataForGroupEdit"
 import useEditGroup from "~/composables/useEditGroup"
+import type { IAllDevicesResponse } from "~/api/device/getAll"
+import type { IUsersByGroupResponse } from '~/api/group/getUsersByGroupId'
 
 const id = useRoute().params.id as string
 
@@ -168,19 +177,34 @@ const deleteFetch = await useAsyncData(
   () => groupStore.deleteGroup(id),
   { immediate: false },
 )
+
 let oldName = ''
+const isNameChanging = ref(false)
 const name = ref('')
 const house = ref('')
-const devices = ref<{ id: string, name:string }[]>([])
-const users = ref<{id:number, name:string}[]>([])
-const usersForRemove = ref<{id:number, name:string}[]>([])
-const existingDevices = ref<{id:string, name:string}[]>([])
+const addDevice = ref(false)
+const devices = ref<IAllDevicesResponse[]>([])
+const users = ref<IUsersByGroupResponse[]>([])
+const usersForRemove = ref<IUsersByGroupResponse[]>([])
+const existingDevices = ref<IAllDevicesResponse[]>([])
 const groupStore = useGroupsStore()
 const previewData = ref({
   name,
   devices,
   users,
 })
+const isModalOpen = ref(false)
+
+const roommatesFetch = useLazyAsyncData(
+  'groupUsers',
+  () => groupStore.getUsersByGroupId(groupStore.currentHome),
+)
+
+const checkIfDeviceChecked = (deviceId: string) => devices.value.findIndex(device => device.id === deviceId) > -1
+
+async function getRoommates () {
+  await roommatesFetch.refresh()
+}
 
 const isLoading = computed(() =>
   (deleteFetch.pending.value && deleteFetch.status.value !== 'idle') ||
@@ -195,12 +219,18 @@ async function getGroupData () {
     name.value = groupName
     oldName = groupName
     devices.value = inGroupDevices
-    existingDevices.value = inHouseDevices
+    existingDevices.value = inHouseDevices.concat(inGroupDevices)
     users.value = inGroupUsers
     house.value = groupHouse
   }
 }
+
 getGroupData()
+
+const removeUser = (user: IUsersByGroupResponse) => {
+  usersForRemove.value.push({id:user.userId, name:user.name} as IUsersByGroupResponse);
+  users.value.splice(users.value.findIndex(existingUser=>existingUser.id === user.userId),1)
+}
 
 async function editGroup () {
   await editFetch.execute()
@@ -211,6 +241,7 @@ async function editGroup () {
     }, 900)
   }
 }
+
 async function deleteGroup () {
   await deleteFetch.execute()
 }
@@ -218,5 +249,18 @@ async function deleteGroup () {
 
 </script>
 <style lang="scss">
+.add-menu-enter-active,
+.add-menu-leave-active {
+  transition: all 0.5s ease;
+}
+
+.add-menu-enter-from,
+.add-menu-leave-to {
+  transform: translateY(-100%);
+}
+.add-menu-enter-to,
+.add-menu-leave-from {
+  transform: translateY(0);
+}
 @import "assets/styles/page/user-add-room";
 </style>

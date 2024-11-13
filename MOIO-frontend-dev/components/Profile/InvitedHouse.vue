@@ -11,19 +11,14 @@
     <div class="invited-house__actions" style="display:flex; gap: 16px;">
       <ui-button
         class="invited-house__actions-action"
-        class-name="default"
-        rounded="16px"
-        margin-inline="0"
+        variant="secondary"
         @click="acceptInvite()"
       >
         Принять
       </ui-button>
       <ui-button
         class="invited-house__actions-action"
-        class-name="delete"
-        fill="var(--settings-color)"
-        rounded="16px"
-        margin-inline="0"
+        variant="secondary"
         @click="rejectInvite"
       >
         Отклонить

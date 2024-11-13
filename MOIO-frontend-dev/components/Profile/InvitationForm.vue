@@ -9,10 +9,16 @@
           Если другой пользователь пригласил вас в свой дом, то вам на почту было отправлено письмо с кодом подтверждения
         </label>
         <div class="profile-invitation__input-container">
-          <input id="invite-code" v-model="code" placeholder="Код" type="text" class="profile-invitation__input" required>
+          <p>Пригласительный код</p>
+          <label v-if="isCodeChange">Введите код<ui-icon style="cursor: pointer;" name="pencil" @click="isCodeChange=!isCodeChange" /></label>
+          <input v-if="!isCodeChange" id="invite-code" v-model="code" placeholder="Введите код" type="text" class="profile-invitation__input" required>
         </div>
       </div>
-      <ui-button type="submit" rounded="16px" padding="6px 12px">
+      <ui-button
+        variant="secondary"
+        type="submit"
+        class="profile-invitation__button"
+      >
         Подтвердить
       </ui-button>
     </form>
@@ -22,6 +28,7 @@
 <script setup lang="ts">
 import { useGroupsStore } from "~/store/groups"
 
+const isCodeChange = ref(true)
 const code = ref('')
 const groupStore = useGroupsStore()
 async function checkCode () {

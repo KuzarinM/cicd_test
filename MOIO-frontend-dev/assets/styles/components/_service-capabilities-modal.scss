@@ -1,15 +1,24 @@
 .service-capabilities-modal{
   position: relative;
   width: 100%;
-  max-height: 90dvh;
-  height: auto;
+  height: 100%;
   overflow: hidden;
   background: $bg-primary;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   @media screen and (max-width: 340px){
-    padding-inline: 4px;
     width: 100%;
+  }
+  
+  & .scrollable-content--with-padding {
+    &::-webkit-scrollbar{
+      width: 16px;
+    }
+
+    &::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track {
+      border-width: 12px;
+    }
   }
   label {
     word-wrap: break-word;
@@ -22,67 +31,122 @@
     z-index: 101;
     cursor: pointer;
   }
+  &__parent{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $bg-primary;
+    z-index: 4;
+    &-ico{
+      position: absolute;
+      top: 0;
+    }
+    &-header{
+      font-weight: 700;
+      font-size: 24px;
+      margin-left: 40px;
+    }
+    &-flex{
+      margin-top: 20px;
+      overflow-y: auto;
+      height: 90%;
+    }
+    &-list{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+      &-item{
+      display: flex;
+      flex-direction: column;
+        &__btn{
+          background: none;
+          border: none;
+          width: 100%;
+          text-align: start;
+          transition: 0.3s ease;
+          border-radius: 12px;
+          padding: 12px 0 12px 8px;
+          font-size: 16px;
+          cursor: pointer;
+          &:hover{
+            background-color: $color-bg-hover;
+          }
+        }
+      }
+    }
+    
+  }
+  &__home{
+    display: flex;
+    gap: 8px;
+    &-room{
+      padding-right: 8px;
+    }
+  }
+  &__change{
+    height: 40px;
+    z-index: 1;
+  }
+  &__btn{
+    background: none;
+    border: none;
+    color: $color-test;
+    transition: 0.3s ease;
+    cursor: pointer;
+    &:hover{
+      color: $color-primary;
+    }
+  }
 
   &__header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     width: 100%;
     margin-inline: auto;
-    @include capabilities-modal-header;
-    text-align: center;
+    @include capabilities-change-modal-header;
     position: relative;
-    padding-inline: 20px;
 	  overflow: hidden;
-    min-height: 1em;
+    min-height: 2em;
     &-text{
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      flex: 1;
+      cursor: pointer;
     }
     &.--edited{
-      display: flex;
-      width: calc(100% + 20px);
-      top: 0;
-      padding-inline: 0px;
-      justify-content: space-between;
-      margin-inline: auto;
-      align-items: center;
+      flex: 1;
       
       input{
         background: $bg-primary;
         outline: none;
-        border: none;
+        border: none; 
         font-size: 20px;
-        margin-left: 12px;
         border-bottom: 1px solid;
-        width: calc(100% - 50px);
+        width: 100%;
         @media screen and (max-width:768px) {
           font-size: 16px;
         }
       }
     }
   }
-  .edit-ico{
-    font-size: 24px;
-    cursor: pointer;
-    bottom: -2px;
-    position: absolute;
-    left: 0;
-    z-index: 1;
-    width: fit-content;
-    @media screen and (max-width: 768px) {
-      font-size: 20px;
-    }
-  }
   &__body{
     display: flex;
+    height: fit-content;
     flex-direction: column;
+    justify-content: space-between;
     overflow-y: auto;
     overflow-x: hidden;
     gap: 10px;
-    position: relative;
-    min-height: calc(100% - 24px);
-    padding-inline: 8px;
-    padding-bottom: 8px;
+    min-height: calc(100% - 70px);
     &::-webkit-scrollbar {
       width: 4px;
     }
@@ -95,25 +159,41 @@
     &::-webkit-scrollbar-thumb:hover {
       background: #555;
     }
+    @media screen and (max-width: 400px) {
+      height: 100%;
+      min-height: 0;
+    }
   }
   &__footer{
-    margin-top: 24px;
-    padding-top: 24px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: stretch;
     bottom: 0;
     position: relative;
-    flex: 1;
     gap: 12px;
-    border-top: 2px solid $settings-color;
-    .ui-button{
-      width: 100%;
-      @include carousel-category-item;
-      font-weight: 600;
-      color: $color-primary;
-      text-align: center;
+  }
+}
+
+.toggle-switch-wrapper.--vertical-large.--pending{
+  .toggle-switch{
+    cursor: progress;
+    pointer-events: none;
+    &::before{
+      display: block;
+      content: '';
+      background: rgba(238, 238, 238, 0.74);
+      background: linear-gradient(110deg, rgba(236, 236, 236, 0.8) 20%, rgba(245, 245, 245, 0.8) 18%, rgba(236, 236, 236, 0.8) 33%);
+      background-size: 200% 100%;
+      animation: service-skeleton 1s infinite linear;
+      position: absolute;
+      border-radius: 24px;
+      opacity: .95;
+      z-index: 5;
+      height: 102%;
+      top: -1%;
+      right: -1%;
+      width: 102%;
     }
   }
 }

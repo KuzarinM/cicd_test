@@ -1,6 +1,6 @@
 <template>
   <div class="aside">
-    <div ref="trigger" :class="`aside-trigger ${isAsideCollapsed? '--collapsed':' '}`">
+    <!-- <div ref="trigger" :class="`aside-trigger ${isAsideCollapsed? '--collapsed':' '}`">
       <ui-button
         class-name="blank"
         margin-inline="0"
@@ -12,8 +12,10 @@
           @click="isAsideCollapsed=!isAsideCollapsed"
         />
       </ui-button>
-    </div>
+    </div> -->
     <div ref="aside" :class="`aside-collapse ${isAsideCollapsed&& '--collapsed'}`">
+      <div class="scrollable-content">
+
       <div class="aside-main">
         <aside-category
           category-header="Основное"
@@ -37,28 +39,52 @@
           :category-items="floors"
         />
       </div>
-      <div class="aside-footer">
-        <button class="aside-footer__item" @click="colorMode.toggle()">
-          <ui-icon name="aside/theme" size="28" />{{ colorMode?.name.value.includes('dark') ?"Светлая тема":"Темная тема" }}
-        </button>
-        <button class="aside-footer__item" @click="logout()">
-          <ui-icon name="aside/logout" size="26" />
-          Выйти
-        </button>
+      <div class="aside-border">
+        <div class="aside-footer">
+          <setting-group />
+        </div>
       </div>
+    </div>
+  </div>
+  <div class="tollbar__container">
+    <div class="toolbar">
+      <div class="toolbar__flex">
+        <template v-if="groupsStore.canAutomate">
+          <nuxt-link :class="`toolbar__flex-item ${currentRoute.path.includes('/automation',0) ? '--active':''}`" to="/automation">
+            <ui-icon name="aside/automation" />
+            <span style="white-space: nowrap;">Автом-ии</span>
+          </nuxt-link>
+          <nuxt-link :class="`toolbar__flex-item ${currentRoute.path.includes('/scenarios',0) ?'--active':''}`" to="/scenarios">
+            <ui-icon name="aside/scenarios" />
+            <span style="white-space: nowrap;">Сценарии</span>
+          </nuxt-link>
+        </template>
+        <nuxt-link :class="`toolbar__flex-item ${currentRoute.path == '/'?'--active':''}`" to="/">
+          <ui-icon name="aside/home" />
+          <span style="white-space: nowrap;">Дом</span>
+        </nuxt-link>
+        <nuxt-link :class="`toolbar__flex-item ${currentRoute.path.includes('/category', 1) ? '--active':''}`" :to="categories?.at(0)?.url ?? '/user/category/1'">
+          <ui-icon name="category" />
+          <span style="white-space: nowrap;">Категории</span>
+        </nuxt-link>
+        <nuxt-link :class="`toolbar__flex-item ${currentRoute.path == '/user'?'--active':''}`" to="/user">
+          <ui-icon name="aside/profile" />
+          <span style="white-space: nowrap;">Профиль</span>
+        </nuxt-link>
+      </div>
+    </div>        
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia"
-import AsideCategory from '~/components/Aside/AsideCategory.vue'
-import { useUserStore } from "~/store/user"
 import { useCategoriesStore } from "~/store/categories"
 import { useGroupsStore } from "~/store/groups"
+import AsideCategory from '~/components/Aside/AsideCategory.vue'
+import SettingGroup from "~/components/SettingGroup/SettingGroup.vue"
 import UiIcon from "~/components/ui/UiIcon.vue"
 import type { TUiIconNames } from "#build/types/ui-icon"
-import useColorTheme from "~/composables/useColorTheme"
 
 export interface IAsideContent {
   categoryTitle:string
@@ -70,7 +96,6 @@ export interface IAsideContent {
 }
 const groupsStore = useGroupsStore()
 const categoriesStore = useCategoriesStore()
-const colorMode = useColorTheme()
 const { currentRoute } = useRouter()
 const { rooms, floors } = storeToRefs(groupsStore)
 const isAsideCollapsed = ref(false)
@@ -119,10 +144,11 @@ async function getCategories () {
 }
 getCategories()
 
-function logout () {
-  const userStore = useUserStore()
-  userStore.logout()
+async function getGroupTypes () {
+  await groupsStore.getGroupTypes()
 }
+getGroupTypes()
+
 watch(currentRoute, () => {
   if (isAsideCollapsed.value) {
     isAsideCollapsed.value = false
